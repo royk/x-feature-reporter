@@ -1,0 +1,19 @@
+{
+  "name": "x-feature-reporter",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/royk/x-feature-reporter.git"
+  },
+  "author": "Roy Klein",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/royk/x-feature-reporter/issues"
+  },
+  "homepage": "https://github.com/royk/x-feature-reporter#readme"
+}
