@@ -9,6 +9,7 @@ let writeFileSyncStub: sinon.SinonStub;
 const featureTitle = 'Feature title';
 const subfeatureTitle = 'Subfeature title';
 const caseTitle = 'case title';
+const caseTitle2 = 'case title 2';
 const passingEmoji = ':white_check_mark:';
 const failingEmoji = ':x:';
 const skippedEmoji = ':construction:';
@@ -50,6 +51,27 @@ test.describe("Features", () => {
     const expectedMarkdown = `\n## ${featureTitle}\n  ### ${subfeatureTitle}\n  - ${passingEmoji} ${caseTitle}\n`;
     const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
     
+    expect(actualMarkdown).toBe(expectedMarkdown);
+  });
+  test(`TestResults appear as list items representing features. Each feature is visually marked as Passing ${passingEmoji}, Failing ${failingEmoji} or Skipped ${skippedEmoji}`, () => {
+    const testSuite: TestSuite = {
+      title: featureTitle,
+      suites: [],
+      tests: []
+    };
+    const failedCase: TestResult = {
+      title: caseTitle,
+      status: 'failed',
+    };
+    const skippedCase: TestResult = {
+      title: caseTitle2,
+      status: 'skipped',
+    };
+    testSuite.tests.push(failedCase);
+    testSuite.tests.push(skippedCase);
+    reporter.generateReport(outputFile, testSuite);
+    const expectedMarkdown = `\n## ${featureTitle}\n- ${failingEmoji} ${caseTitle}\n- ${skippedEmoji} ${caseTitle2}\n`;
+    const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
     expect(actualMarkdown).toBe(expectedMarkdown);
   });
   test("Suites can be marked as transparent: They will not be printed but their children will be printed", () => {
