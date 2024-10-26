@@ -49,3 +49,5 @@ jspm_packages/
 /test-results/
 /blob-report/
 /playwright/.cache/
+
+playwright-report/trace
