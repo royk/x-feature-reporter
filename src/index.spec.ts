@@ -22,6 +22,10 @@ test.beforeEach(() => {
   reporter = new XFeatureReporter();
 });
 
+test.afterEach(() => {
+  sinon.restore(); 
+});
+
 test.describe("Features", () => {
   test("Suites appear as headings. Nested Suites are nested headings", () => {
     const testSuite: TestSuite = {
