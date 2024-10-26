@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import sinon from 'sinon';
 import fs from 'fs';
-import XFeatureReporter, { TestSuite, TestResult, TEST_TYPE_BEHAVIOR } from './index';
+import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR } from './index';
 
 
 let writeFileSyncStub: sinon.SinonStub;
@@ -23,7 +23,7 @@ test.beforeEach(() => {
 });
 
 test.describe("Features", () => {
-  test("Describe blocks appear as headings. Nested describe blocks are nested headings", () => {
+  test("Suites appear as headings. Nested Suites are nested headings", () => {
     const testSuite: TestSuite = {
       title: featureTitle,
       suites: [],
@@ -44,6 +44,33 @@ test.describe("Features", () => {
     reporter.generateReport(outputFile, testSuite);
 
     const expectedMarkdown = `\n## ${featureTitle}\n  ### ${subfeatureTitle}\n  - ${passingEmoji} ${caseTitle}\n`;
+    const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+    
+    expect(actualMarkdown).toBe(expectedMarkdown);
+  });
+  test("Suites can be marked as transparent: They will not be printed but their children will be printed", () => {
+    const rootSuite: TestSuite = {
+      title: 'dont print',
+      transparent: true,
+      suites: [],
+      tests: []
+    };
+
+    const testSuite: TestSuite = {
+      title: featureTitle,
+      suites: [],
+      tests: []
+    };
+    rootSuite.suites.push(testSuite);
+    const testCase: TestResult = {
+      title: caseTitle,
+      status: 'passed',
+      testType: TEST_TYPE_BEHAVIOR
+    };
+    testSuite.tests.push(testCase);
+    reporter.generateReport(outputFile, rootSuite);
+
+    const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n`;
     const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
     
     expect(actualMarkdown).toBe(expectedMarkdown);

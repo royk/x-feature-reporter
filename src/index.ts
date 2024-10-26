@@ -4,6 +4,7 @@ export type TestSuite = {
   title: string;
   suites: TestSuite[];
   tests: TestResult[];
+  transparent?: boolean;
 };
 export type TestResult = {
   title: string;
@@ -15,9 +16,12 @@ export const TEST_TYPE_BEHAVIOR = 'behavior';
 export const embeddingPlaceholder = "<!-- playwright-feature-reporter--start -->";
 export const embeddingPlaceholderEnd = "<!-- playwright-feature-reporter--end -->";
 
-export default class XFeatureReporter {
+export class XFeatureReporter {
+  constructor() {
+    this.nestedLevel = 0;
+    this.stringBuilder = '';
+  }
   private nestedLevel = 0;
-  private projectCount = 0;
   private stringBuilder = '';
   _mergeSuites(suite: TestSuite, suiteStructure: Record<string, TestSuite>) {
     if (suiteStructure[suite.title]) {
@@ -60,32 +64,34 @@ export default class XFeatureReporter {
     if (s.tests.length === 0 && s.suites.length === 0) {
       return;
     }
-    const printableTests = s.tests.filter((test) => this._willPrintTest(test));
-    // if there are no tests and no nested suites, don't print the suite
-    // TODO: Consider differentiating between no tests and no printable tests
-    if (s.suites.length === 0 && printableTests.length === 0) {
-      return;
-    }
-    this.stringBuilder += `${headerPrefix} ${s.title}\n`;
-    this.nestedLevel++;
-    const testNames = [];
-    s.tests
-    .filter((test) => this._willPrintTest(test))
-    .forEach((test) => {
-      if (testNames.includes(test.title)) {
+    if (s.transparent===null || !s.transparent) {
+      const printableTests = s.tests.filter((test) => this._willPrintTest(test));
+      // if there are no tests and no nested suites, don't print the suite
+      // TODO: Consider differentiating between no tests and no printable tests
+      if (s.suites.length === 0 && printableTests.length === 0) {
         return;
       }
-     
-      testNames.push(test.title);
-      let testTitle = test.title;
-      let additionalNesting = 0;
-      if (testTitle.startsWith('-')) {
-        additionalNesting = testTitle.indexOf(' ');
-        testTitle = testTitle.slice(additionalNesting+1);
-      }
-      const listPrefix = '  '.repeat(myNestedLevel + additionalNesting) + '-';
-      this.stringBuilder += `${listPrefix} ${this._getOutcomeIcon(test)} ${testTitle}\n`;
-    });
+      this.stringBuilder += `${headerPrefix} ${s.title}\n`;
+      this.nestedLevel++;
+      const testNames = [];
+      s.tests
+      .filter((test) => this._willPrintTest(test))
+      .forEach((test) => {
+        if (testNames.includes(test.title)) {
+          return;
+        }
+      
+        testNames.push(test.title);
+        let testTitle = test.title;
+        let additionalNesting = 0;
+        if (testTitle.startsWith('-')) {
+          additionalNesting = testTitle.indexOf(' ');
+          testTitle = testTitle.slice(additionalNesting+1);
+        }
+        const listPrefix = '  '.repeat(myNestedLevel + additionalNesting) + '-';
+        this.stringBuilder += `${listPrefix} ${this._getOutcomeIcon(test)} ${testTitle}\n`;
+      });
+    }
     s.suites.forEach((ss) => {
       this._printSuite(ss);
     });

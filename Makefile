@@ -10,7 +10,7 @@ test-watch:
 	PWTEST_WATCH=1 npm test	
 
 build:
-	npm run build && npm test
+	npm test && npm run build
 
 release:
 	npm run release

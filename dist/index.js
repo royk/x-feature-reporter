@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.embeddingPlaceholderEnd = exports.embeddingPlaceholder = exports.TEST_TYPE_BEHAVIOR = void 0;
+exports.XFeatureReporter = exports.embeddingPlaceholderEnd = exports.embeddingPlaceholder = exports.TEST_TYPE_BEHAVIOR = void 0;
 const fs_1 = __importDefault(require("fs"));
 exports.TEST_TYPE_BEHAVIOR = 'behavior';
 exports.embeddingPlaceholder = "<!-- playwright-feature-reporter--start -->";
@@ -11,7 +11,8 @@ exports.embeddingPlaceholderEnd = "<!-- playwright-feature-reporter--end -->";
 class XFeatureReporter {
     constructor() {
         this.nestedLevel = 0;
-        this.projectCount = 0;
+        this.stringBuilder = '';
+        this.nestedLevel = 0;
         this.stringBuilder = '';
     }
     _mergeSuites(suite, suiteStructure) {
@@ -52,31 +53,33 @@ class XFeatureReporter {
         if (s.tests.length === 0 && s.suites.length === 0) {
             return;
         }
-        const printableTests = s.tests.filter((test) => this._willPrintTest(test));
-        // if there are no tests and no nested suites, don't print the suite
-        // TODO: Consider differentiating between no tests and no printable tests
-        if (s.suites.length === 0 && printableTests.length === 0) {
-            return;
-        }
-        this.stringBuilder += `${headerPrefix} ${s.title}\n`;
-        this.nestedLevel++;
-        const testNames = [];
-        s.tests
-            .filter((test) => this._willPrintTest(test))
-            .forEach((test) => {
-            if (testNames.includes(test.title)) {
+        if (s.transparent === null || !s.transparent) {
+            const printableTests = s.tests.filter((test) => this._willPrintTest(test));
+            // if there are no tests and no nested suites, don't print the suite
+            // TODO: Consider differentiating between no tests and no printable tests
+            if (s.suites.length === 0 && printableTests.length === 0) {
                 return;
             }
-            testNames.push(test.title);
-            let testTitle = test.title;
-            let additionalNesting = 0;
-            if (testTitle.startsWith('-')) {
-                additionalNesting = testTitle.indexOf(' ');
-                testTitle = testTitle.slice(additionalNesting + 1);
-            }
-            const listPrefix = '  '.repeat(myNestedLevel + additionalNesting) + '-';
-            this.stringBuilder += `${listPrefix} ${this._getOutcomeIcon(test)} ${testTitle}\n`;
-        });
+            this.stringBuilder += `${headerPrefix} ${s.title}\n`;
+            this.nestedLevel++;
+            const testNames = [];
+            s.tests
+                .filter((test) => this._willPrintTest(test))
+                .forEach((test) => {
+                if (testNames.includes(test.title)) {
+                    return;
+                }
+                testNames.push(test.title);
+                let testTitle = test.title;
+                let additionalNesting = 0;
+                if (testTitle.startsWith('-')) {
+                    additionalNesting = testTitle.indexOf(' ');
+                    testTitle = testTitle.slice(additionalNesting + 1);
+                }
+                const listPrefix = '  '.repeat(myNestedLevel + additionalNesting) + '-';
+                this.stringBuilder += `${listPrefix} ${this._getOutcomeIcon(test)} ${testTitle}\n`;
+            });
+        }
         s.suites.forEach((ss) => {
             this._printSuite(ss);
         });
@@ -105,4 +108,4 @@ class XFeatureReporter {
         this._generateMarkdown(outputFile);
     }
 }
-exports.default = XFeatureReporter;
+exports.XFeatureReporter = XFeatureReporter;

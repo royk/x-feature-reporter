@@ -2,6 +2,7 @@ export type TestSuite = {
     title: string;
     suites: TestSuite[];
     tests: TestResult[];
+    transparent?: boolean;
 };
 export type TestResult = {
     title: string;
@@ -11,9 +12,9 @@ export type TestResult = {
 export declare const TEST_TYPE_BEHAVIOR = "behavior";
 export declare const embeddingPlaceholder = "<!-- playwright-feature-reporter--start -->";
 export declare const embeddingPlaceholderEnd = "<!-- playwright-feature-reporter--end -->";
-export default class XFeatureReporter {
+export declare class XFeatureReporter {
+    constructor();
     private nestedLevel;
-    private projectCount;
     private stringBuilder;
     _mergeSuites(suite: TestSuite, suiteStructure: Record<string, TestSuite>): TestSuite;
     _willPrintTest(test: TestResult): boolean;
