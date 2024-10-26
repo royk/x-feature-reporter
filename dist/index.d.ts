@@ -21,5 +21,5 @@ export declare class XFeatureReporter {
     _getOutcomeIcon(testCase: TestResult): ":construction:" | ":white_check_mark:" | ":x:";
     _printSuite(s: TestSuite): void;
     _generateMarkdown(outputFile: string): void;
-    generateReport(outputFile: string, results: TestSuite): void;
+    generateReport(outputFile: string, results: TestSuite, fullReportLink?: string): void;
 }

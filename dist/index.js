@@ -100,11 +100,14 @@ class XFeatureReporter {
             fs_1.default.writeFileSync(outputFile, this.stringBuilder);
         }
     }
-    generateReport(outputFile, results) {
+    generateReport(outputFile, results, fullReportLink) {
         const mergedSuite = this._mergeSuites(results, {});
         this.stringBuilder = '\n';
         this.nestedLevel = 0;
         this._printSuite(mergedSuite);
+        if (fullReportLink) {
+            this.stringBuilder += `\n[Test report](${fullReportLink})\n`;
+        }
         this._generateMarkdown(outputFile);
     }
 }

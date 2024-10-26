@@ -112,11 +112,14 @@ export class XFeatureReporter {
     }
   }
 
-  generateReport(outputFile: string, results: TestSuite) {
+  generateReport(outputFile: string, results: TestSuite, fullReportLink?: string) {
     const mergedSuite = this._mergeSuites(results, {});
     this.stringBuilder = '\n';
     this.nestedLevel = 0;
     this._printSuite(mergedSuite);
+    if (fullReportLink) {
+      this.stringBuilder += `\n[Test report](${fullReportLink})\n`;
+    }
     this._generateMarkdown(outputFile);
   }
 }

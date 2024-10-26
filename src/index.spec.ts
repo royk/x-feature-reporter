@@ -75,4 +75,24 @@ test.describe("Features", () => {
     
     expect(actualMarkdown).toBe(expectedMarkdown);
   });
+  test("A link to a full test report will be included when the 'fullReportLink' option is provided", () => {
+    const fullReportLink = 'full-report.html';
+    const testSuite: TestSuite = {
+      title: featureTitle,
+      suites: [],
+      tests: []
+    };
+    const testCase: TestResult = {
+      title: caseTitle,
+      status: 'passed',
+      testType: TEST_TYPE_BEHAVIOR
+    };
+    testSuite.tests.push(testCase);
+    reporter.generateReport(outputFile, testSuite, fullReportLink);
+
+    const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n\n[Test report](${fullReportLink})\n`;
+    const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+    
+    expect(actualMarkdown).toBe(expectedMarkdown);
+  });
 });
