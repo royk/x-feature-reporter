@@ -236,7 +236,6 @@ test.describe("Features", () => {
         suites: [],
         tests: []
       };
-
       const testCase1: TestResult = {
         title: caseTitle,
         status: 'passed',
@@ -259,7 +258,6 @@ test.describe("Features", () => {
         suites: [],
         tests: []
       };
-
       const testCase1: TestResult = {
         title: caseTitle,
         status: 'passed',
@@ -267,6 +265,7 @@ test.describe("Features", () => {
       testSuite.tests.push(testCase1);
       sinon.stub(fs, 'existsSync').returns(true);
       sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd);
+      
       reporter.generateReport(outputFile, testSuite);
       const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n`;
       const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd;
