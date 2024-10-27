@@ -120,7 +120,6 @@ test.describe("Features", () => {
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
     test("Suites containing only non-behavioral tests are not shown in the report", () => {
-      // describe block annotation is basically the same as a block whose all children have the same annotation
       const testSuite1: TestSuite = {
         title: featureTitle,
         suites: [],
