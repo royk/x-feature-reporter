@@ -18,7 +18,7 @@ Example:
     - :white_check_mark: Features can nest multiple levels deep using multiple '-' prefixes
   ### Embedding
   - :white_check_mark: The features list is embedded in an existing file between placeholders
-    - :white_check_mark: Omit the closing placeholder if it's the last content in the file
+  - :white_check_mark: The closing placeholder can be ommitted if the feature list is intended as the last content in the file
   ### Options
   - :white_check_mark: A link to a full test report will be included when the 'fullReportLink' option is provided
 
