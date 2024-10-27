@@ -181,7 +181,7 @@ test.describe("Features", () => {
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
-    test("Features can nest under other features", () => {
+    test("Features can nest under other features using a '-' prefix", () => {
       const testSuite: TestSuite = {
         title: featureTitle,
         suites: [],
@@ -200,6 +200,28 @@ test.describe("Features", () => {
       testSuite.tests.push(testCase2);
       reporter.generateReport(outputFile, testSuite);
       const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n  - ${passingEmoji} ${caseTitle2}\n`;
+      const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+      expect(actualMarkdown).toBe(expectedMarkdown);
+    });
+    test("- Features can nest multiple levels deep using multiple '-' prefixes", () => {
+      const testSuite: TestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: []
+      };
+
+      const testCase1: TestResult = {
+        title: caseTitle,
+        status: 'passed',
+      };
+      const testCase2: TestResult = {
+        title: `-- ${caseTitle2}`,
+        status: 'passed',
+      };
+      testSuite.tests.push(testCase1);
+      testSuite.tests.push(testCase2);
+      reporter.generateReport(outputFile, testSuite);
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n    - ${passingEmoji} ${caseTitle2}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
