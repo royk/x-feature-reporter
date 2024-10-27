@@ -138,12 +138,12 @@ test.describe("Features", () => {
     });
   });
   test.describe("TestResults (features)", () => {
-  test(`TestResults appear as list items representing features. Each feature is visually marked as Passing ${passingEmoji}, Failing ${failingEmoji} or Skipped ${skippedEmoji}`, () => {
-    const testSuite: TestSuite = {
-      title: featureTitle,
-      suites: [],
-      tests: []
-    };
+    test(`TestResults appear as list items representing features. Each feature is visually marked as Passing ${passingEmoji}, Failing ${failingEmoji} or Skipped ${skippedEmoji}`, () => {
+      const testSuite: TestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: []
+      };
       const failedCase: TestResult = {
         title: caseTitle,
         status: 'failed',
@@ -159,7 +159,30 @@ test.describe("Features", () => {
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
+    test("Only TestResults with testType 'behavior' appear as features. If testType is note specified, it's assumed to be 'behavior'", () => {
+      const testSuite: TestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: []
+      };
+      const testCase1: TestResult = {
+        title: caseTitle,
+        status: 'passed',
+        testType: 'edge-case'
+      };
+      const testCase2: TestResult = {
+        title: caseTitle2,
+        status: 'passed'
+      };
+      testSuite.tests.push(testCase1);
+      testSuite.tests.push(testCase2);
+      reporter.generateReport(outputFile, testSuite);
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle2}\n`;
+      const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+      expect(actualMarkdown).toBe(expectedMarkdown);
+    });
   });
+  
   
   test("A link to a full test report will be included when the 'fullReportLink' option is provided", () => {
     const fullReportLink = 'full-report.html';
