@@ -28,7 +28,7 @@ test.afterEach(() => {
 });
 
 test.describe("Features", () => {
-  test.describe("Suites", () => {
+  test.describe("Suites (headings)", () => {
     test("Suites appear as headings. Nested Suites are nested headings", () => {
       const testSuite: TestSuite = {
         title: featureTitle,
@@ -119,8 +119,26 @@ test.describe("Features", () => {
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
+    test("Suites containing only non-behavioral tests are not shown in the report", () => {
+      // describe block annotation is basically the same as a block whose all children have the same annotation
+      const testSuite1: TestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: []
+      };
+      const testCase1: TestResult = {
+        title: caseTitle,
+        status: 'passed',
+        testType: 'edge-case'
+      };
+      testSuite1.tests.push(testCase1);
+      reporter.generateReport(outputFile, testSuite1);
+      const expectedMarkdown = `\n`;
+      const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+      expect(actualMarkdown).toBe(expectedMarkdown);
+    });
   });
-  test.describe("TestResults", () => {
+  test.describe("TestResults (features)", () => {
   test(`TestResults appear as list items representing features. Each feature is visually marked as Passing ${passingEmoji}, Failing ${failingEmoji} or Skipped ${skippedEmoji}`, () => {
     const testSuite: TestSuite = {
       title: featureTitle,
