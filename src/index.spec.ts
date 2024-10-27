@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import sinon from 'sinon';
 import fs from 'fs';
-import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR } from './index';
+import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR, embeddingPlaceholder, embeddingPlaceholderEnd } from './index';
 
 
 let writeFileSyncStub: sinon.SinonStub;
@@ -224,6 +224,54 @@ test.describe("Features", () => {
       const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n    - ${passingEmoji} ${caseTitle2}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
+    });
+  });
+  test.describe("Embedding", () => {
+    test("The features list is embedded in an existing file between placeholders", () => {
+      const initialContent = "This is static content in the header";
+      const additionalContent = "this is additional content in the footer";
+      const oldContent = "this is old generated content";
+      const testSuite: TestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: []
+      };
+
+      const testCase1: TestResult = {
+        title: caseTitle,
+        status: 'passed',
+      };
+      testSuite.tests.push(testCase1);
+      sinon.stub(fs, 'existsSync').returns(true);
+      sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd+additionalContent);
+      
+      reporter.generateReport(outputFile, testSuite);
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n`;
+      const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd + additionalContent;
+      const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+      expect(actualMarkdown).toBe(expectedContent);
+    });
+    test("- Omit the closing placeholder if it's the last content in the file", () => {
+      const initialContent = "This is static content";
+      const oldContent = "this is old generated content";
+      const testSuite: TestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: []
+      };
+
+      const testCase1: TestResult = {
+        title: caseTitle,
+        status: 'passed',
+      };
+      testSuite.tests.push(testCase1);
+      sinon.stub(fs, 'existsSync').returns(true);
+      sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd);
+      reporter.generateReport(outputFile, testSuite);
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n`;
+      const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd;
+      const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+      expect(actualMarkdown).toBe(expectedContent);
     });
   });
   
