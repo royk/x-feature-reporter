@@ -250,7 +250,7 @@ test.describe("Features", () => {
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedContent);
     });
-    test("- Omit the closing placeholder if it's the last content in the file", () => {
+    test("The closing placeholder can be ommitted if the feature list is intended as the last content in the file", () => {
       const initialContent = "This is static content";
       const oldContent = "this is old generated content";
       const testSuite: TestSuite = {
@@ -265,7 +265,7 @@ test.describe("Features", () => {
       testSuite.tests.push(testCase1);
       sinon.stub(fs, 'existsSync').returns(true);
       sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd);
-      
+
       reporter.generateReport(outputFile, testSuite);
       const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n`;
       const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd;
