@@ -53,7 +53,8 @@ class XFeatureReporter {
         if (s.tests.length === 0 && s.suites.length === 0) {
             return;
         }
-        if (s.transparent === null || !s.transparent) {
+        const isTransparent = s.transparent === null || !s.transparent;
+        if (isTransparent) {
             const printableTests = s.tests.filter((test) => this._willPrintTest(test));
             // if there are no tests and no nested suites, don't print the suite
             // TODO: Consider differentiating between no tests and no printable tests
@@ -83,7 +84,9 @@ class XFeatureReporter {
         s.suites.forEach((ss) => {
             this._printSuite(ss);
         });
-        this.nestedLevel--;
+        if (!isTransparent) {
+            this.nestedLevel--;
+        }
     }
     _generateMarkdown(outputFile) {
         const existingContent = fs_1.default.existsSync(outputFile) ? fs_1.default.readFileSync(outputFile, 'utf8') : '';
