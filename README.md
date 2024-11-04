@@ -1,4 +1,10 @@
+# X-Feature Reporter
+Generates or updates a Markdown file with the results of a test run.
+Not intended to be used directly. Rather, use it as a base for your custom reporter.
 
+The below features section was generated using [Playwright-feature-reporter](https://github.com/royk/playwright-feature-reporter), which is based on this library.
+
+<!-- playwright-feature-reporter--start -->
 ## Features
   ### Suites (headings)
   - :white_check_mark: Suites appear as headings. Nested Suites are nested headings
@@ -16,4 +22,4 @@
   ### Options
   - :white_check_mark: A link to a full test report will be included when the 'fullReportLink' option is provided
 
-[Test report](https://raw.githack.com/royk/x-feature-reporter/refs/heads/main/playwright-report/index.html)
+[Test report](playwright-report/index.html)
