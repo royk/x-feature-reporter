@@ -12,6 +12,11 @@ export type TestResult = {
   testType?: string;
 };
 
+export type XFeatureReporterOptions = {
+  embeddingPlaceholder?: string;
+  fullReportLink?: string;
+};
+
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 export const embeddingPlaceholder = "<!-- x-feature-reporter--start -->";
 export const embeddingPlaceholderEnd = "<!-- x-feature-reporter--end -->";
@@ -116,13 +121,13 @@ export class XFeatureReporter {
     }
   }
 
-  generateReport(outputFile: string, results: TestSuite, fullReportLink?: string) {
+  generateReport(outputFile: string, results: TestSuite, options?: XFeatureReporterOptions) {
     const mergedSuite = this._mergeSuites(results, {});
     this.stringBuilder = '\n';
     this.nestedLevel = 0;
     this._printSuite(mergedSuite);
-    if (fullReportLink) {
-      this.stringBuilder += `\n[Test report](${fullReportLink})\n`;
+    if (options?.fullReportLink) {
+      this.stringBuilder += `\n[Test report](${options.fullReportLink})\n`;
     }
     this._generateMarkdown(outputFile);
   }

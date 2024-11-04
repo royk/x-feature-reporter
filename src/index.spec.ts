@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import sinon from 'sinon';
 import fs from 'fs';
-import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR, embeddingPlaceholder, embeddingPlaceholderEnd } from './index';
+import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR, embeddingPlaceholder, embeddingPlaceholderEnd, XFeatureReporterOptions } from './index';
 
 
 let writeFileSyncStub: sinon.SinonStub;
@@ -281,6 +281,32 @@ test.describe("Features", () => {
   });
   
   test.describe("Options", () => {
+    test.skip("Placeholder prefix can be specified using the 'embeddingPlaceholder' option", () => {
+      const customEmbeddingPlaceholder = 'x-feature-reporter';
+      const embeddingPlaceholder = `<!-- ${customEmbeddingPlaceholder}--start -->`;
+      const embeddingPlaceholderEnd = `<!-- ${customEmbeddingPlaceholder}--end -->`;
+
+      const initialContent = "This is static content";
+      const oldContent = "this is old generated content";
+      const testSuite: TestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: []
+      };
+      const testCase1: TestResult = {
+        title: caseTitle,
+        status: 'passed',
+      };
+      testSuite.tests.push(testCase1);
+      sinon.stub(fs, 'existsSync').returns(true);
+      sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd);
+      const options = {embeddingPlaceholder: customEmbeddingPlaceholder} as XFeatureReporterOptions;
+      reporter.generateReport(outputFile, testSuite, options);
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n`;
+      const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd;
+      const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+      expect(actualMarkdown).toBe(expectedContent);
+    });
     test("A link to a full test report will be included when the 'fullReportLink' option is provided", () => {
       const fullReportLink = 'full-report.html';
       const testSuite: TestSuite = {
@@ -294,7 +320,8 @@ test.describe("Features", () => {
         testType: TEST_TYPE_BEHAVIOR
       };
       testSuite.tests.push(testCase);
-      reporter.generateReport(outputFile, testSuite, fullReportLink);
+      const options = {fullReportLink: fullReportLink} as XFeatureReporterOptions;
+      reporter.generateReport(outputFile, testSuite, options);
 
       const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n\n[Test report](${fullReportLink})\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
