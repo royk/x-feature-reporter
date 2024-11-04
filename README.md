@@ -4,7 +4,7 @@ Not intended to be used directly. Rather, use it as a base for your custom repor
 
 The below features section was generated using [Playwright-feature-reporter](https://github.com/royk/playwright-feature-reporter), which is based on this library.
 
-<!-- playwright-feature-reporter--start -->
+<!-- x-feature-reporter--start -->
 ## Features
   ### Suites (headings)
   - :white_check_mark: Suites appear as headings. Nested Suites are nested headings

@@ -13,8 +13,8 @@ export type TestResult = {
 };
 
 export const TEST_TYPE_BEHAVIOR = 'behavior';
-export const embeddingPlaceholder = "<!-- playwright-feature-reporter--start -->";
-export const embeddingPlaceholderEnd = "<!-- playwright-feature-reporter--end -->";
+export const embeddingPlaceholder = "<!-- x-feature-reporter--start -->";
+export const embeddingPlaceholderEnd = "<!-- x-feature-reporter--end -->";
 
 export class XFeatureReporter {
   constructor() {
