@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.XFeatureReporter = exports.embeddingPlaceholderEnd = exports.embeddingPlaceholder = exports.TEST_TYPE_BEHAVIOR = void 0;
 const fs_1 = __importDefault(require("fs"));
 exports.TEST_TYPE_BEHAVIOR = 'behavior';
-exports.embeddingPlaceholder = "<!-- playwright-feature-reporter--start -->";
-exports.embeddingPlaceholderEnd = "<!-- playwright-feature-reporter--end -->";
+exports.embeddingPlaceholder = "<!-- x-feature-reporter--start -->";
+exports.embeddingPlaceholderEnd = "<!-- x-feature-reporter--end -->";
 class XFeatureReporter {
     constructor() {
         this.nestedLevel = 0;

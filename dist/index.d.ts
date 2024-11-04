@@ -10,8 +10,8 @@ export type TestResult = {
     testType?: string;
 };
 export declare const TEST_TYPE_BEHAVIOR = "behavior";
-export declare const embeddingPlaceholder = "<!-- playwright-feature-reporter--start -->";
-export declare const embeddingPlaceholderEnd = "<!-- playwright-feature-reporter--end -->";
+export declare const embeddingPlaceholder = "<!-- x-feature-reporter--start -->";
+export declare const embeddingPlaceholderEnd = "<!-- x-feature-reporter--end -->";
 export declare class XFeatureReporter {
     constructor();
     private nestedLevel;
