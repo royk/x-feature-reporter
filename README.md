@@ -22,4 +22,4 @@ The below features section was generated using [Playwright-feature-reporter](htt
   ### Options
   - :white_check_mark: A link to a full test report will be included when the 'fullReportLink' option is provided
 
-[Test report](playwright-report/index.html)
+[Test report](https://raw.githack.com/royk/x-feature-reporter/refs/heads/main/playwright-report/index.html)
