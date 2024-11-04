@@ -18,9 +18,8 @@ export type XFeatureReporterOptions = {
 };
 
 export const TEST_TYPE_BEHAVIOR = 'behavior';
-export const embeddingPlaceholder = "<!-- x-feature-reporter--start -->";
-export const embeddingPlaceholderEnd = "<!-- x-feature-reporter--end -->";
-const defaultEmbeddingPlaceholder = 'x-feature-reporter';
+
+export const defaultEmbeddingPlaceholder = 'x-feature-reporter';
 
 export class XFeatureReporter {
   constructor() {

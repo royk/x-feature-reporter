@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import sinon from 'sinon';
 import fs from 'fs';
-import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR, embeddingPlaceholder, embeddingPlaceholderEnd, XFeatureReporterOptions } from './index';
+import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR, XFeatureReporterOptions } from './index';
 
 
 let writeFileSyncStub: sinon.SinonStub;
@@ -233,6 +233,8 @@ test.describe("Features", () => {
     });
   });
   test.describe("Embedding", () => {
+    const embeddingPlaceholder = "<!-- x-feature-reporter--start -->";
+    const embeddingPlaceholderEnd = "<!-- x-feature-reporter--end -->";
     test("The features list is embedded in an existing file between placeholders", () => {
       const initialContent = "This is static content in the header";
       const additionalContent = "this is additional content in the footer";
