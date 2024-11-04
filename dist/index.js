@@ -3,11 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.XFeatureReporter = exports.embeddingPlaceholderEnd = exports.embeddingPlaceholder = exports.TEST_TYPE_BEHAVIOR = void 0;
+exports.XFeatureReporter = exports.defaultEmbeddingPlaceholder = exports.TEST_TYPE_BEHAVIOR = void 0;
 const fs_1 = __importDefault(require("fs"));
 exports.TEST_TYPE_BEHAVIOR = 'behavior';
-exports.embeddingPlaceholder = "<!-- x-feature-reporter--start -->";
-exports.embeddingPlaceholderEnd = "<!-- x-feature-reporter--end -->";
+exports.defaultEmbeddingPlaceholder = 'x-feature-reporter';
 class XFeatureReporter {
     constructor() {
         this.nestedLevel = 0;
@@ -88,30 +87,33 @@ class XFeatureReporter {
             this.nestedLevel--;
         }
     }
-    _generateMarkdown(outputFile) {
+    _generateMarkdown(outputFile, options) {
         const existingContent = fs_1.default.existsSync(outputFile) ? fs_1.default.readFileSync(outputFile, 'utf8') : '';
-        if (existingContent.includes(exports.embeddingPlaceholder)) {
-            let endPlaceholderIndex = existingContent.indexOf(exports.embeddingPlaceholderEnd);
+        const embeddingPlaceholder = (options === null || options === void 0 ? void 0 : options.embeddingPlaceholder) || exports.defaultEmbeddingPlaceholder;
+        const embeddingPlaceholderStart = `<!-- ${embeddingPlaceholder}--start -->`;
+        const embeddingPlaceholderEnd = `<!-- ${embeddingPlaceholder}--end -->`;
+        if (existingContent.includes(embeddingPlaceholderStart)) {
+            let endPlaceholderIndex = existingContent.indexOf(embeddingPlaceholderEnd);
             if (endPlaceholderIndex == -1) {
                 endPlaceholderIndex = existingContent.length;
             }
-            const startPlaceholderIndex = existingContent.indexOf(exports.embeddingPlaceholder);
-            const newContent = existingContent.slice(0, startPlaceholderIndex) + exports.embeddingPlaceholder + this.stringBuilder + existingContent.slice(endPlaceholderIndex);
+            const startPlaceholderIndex = existingContent.indexOf(embeddingPlaceholderStart);
+            const newContent = existingContent.slice(0, startPlaceholderIndex) + embeddingPlaceholderStart + this.stringBuilder + existingContent.slice(endPlaceholderIndex);
             fs_1.default.writeFileSync(outputFile, newContent);
         }
         else {
             fs_1.default.writeFileSync(outputFile, this.stringBuilder);
         }
     }
-    generateReport(outputFile, results, fullReportLink) {
+    generateReport(outputFile, results, options) {
         const mergedSuite = this._mergeSuites(results, {});
         this.stringBuilder = '\n';
         this.nestedLevel = 0;
         this._printSuite(mergedSuite);
-        if (fullReportLink) {
-            this.stringBuilder += `\n[Test report](${fullReportLink})\n`;
+        if (options === null || options === void 0 ? void 0 : options.fullReportLink) {
+            this.stringBuilder += `\n[Test report](${options.fullReportLink})\n`;
         }
-        this._generateMarkdown(outputFile);
+        this._generateMarkdown(outputFile, options);
     }
 }
 exports.XFeatureReporter = XFeatureReporter;
