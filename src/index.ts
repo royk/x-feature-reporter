@@ -20,6 +20,7 @@ export type XFeatureReporterOptions = {
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 export const embeddingPlaceholder = "<!-- x-feature-reporter--start -->";
 export const embeddingPlaceholderEnd = "<!-- x-feature-reporter--end -->";
+const defaultEmbeddingPlaceholder = 'x-feature-reporter';
 
 export class XFeatureReporter {
   constructor() {
@@ -106,15 +107,18 @@ export class XFeatureReporter {
       this.nestedLevel--;
     }
   }
-  _generateMarkdown(outputFile: string) {
+  _generateMarkdown(outputFile: string, options?: XFeatureReporterOptions) {
     const existingContent = fs.existsSync(outputFile) ? fs.readFileSync(outputFile, 'utf8') : '';
-    if (existingContent.includes(embeddingPlaceholder)) {
+    const embeddingPlaceholder = options?.embeddingPlaceholder || defaultEmbeddingPlaceholder;
+    const embeddingPlaceholderStart = `<!-- ${embeddingPlaceholder}--start -->`;
+    const embeddingPlaceholderEnd = `<!-- ${embeddingPlaceholder}--end -->`;
+    if (existingContent.includes(embeddingPlaceholderStart)) {
       let endPlaceholderIndex = existingContent.indexOf(embeddingPlaceholderEnd);
       if (endPlaceholderIndex==-1) {
         endPlaceholderIndex = existingContent.length;
       }
-      const startPlaceholderIndex = existingContent.indexOf(embeddingPlaceholder);
-      const newContent = existingContent.slice(0, startPlaceholderIndex) + embeddingPlaceholder + this.stringBuilder + existingContent.slice(endPlaceholderIndex);
+      const startPlaceholderIndex = existingContent.indexOf(embeddingPlaceholderStart);
+      const newContent = existingContent.slice(0, startPlaceholderIndex) + embeddingPlaceholderStart + this.stringBuilder + existingContent.slice(endPlaceholderIndex);
       fs.writeFileSync(outputFile, newContent);
     } else {
       fs.writeFileSync(outputFile, this.stringBuilder);
@@ -129,6 +133,6 @@ export class XFeatureReporter {
     if (options?.fullReportLink) {
       this.stringBuilder += `\n[Test report](${options.fullReportLink})\n`;
     }
-    this._generateMarkdown(outputFile);
+    this._generateMarkdown(outputFile, options);
   }
 }

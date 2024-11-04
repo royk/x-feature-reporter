@@ -281,8 +281,8 @@ test.describe("Features", () => {
   });
   
   test.describe("Options", () => {
-    test.skip("Placeholder prefix can be specified using the 'embeddingPlaceholder' option", () => {
-      const customEmbeddingPlaceholder = 'x-feature-reporter';
+    test("Placeholder prefix can be specified using the 'embeddingPlaceholder' option", () => {
+      const customEmbeddingPlaceholder = 'custom-feature-reporter';
       const embeddingPlaceholder = `<!-- ${customEmbeddingPlaceholder}--start -->`;
       const embeddingPlaceholderEnd = `<!-- ${customEmbeddingPlaceholder}--end -->`;
 
