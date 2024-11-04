@@ -20,6 +20,7 @@ export declare class XFeatureReporter {
     private nestedLevel;
     private stringBuilder;
     _mergeSuites(suite: TestSuite, suiteStructure: Record<string, TestSuite>): TestSuite;
+    _getStringBuilder(): string;
     _willPrintTest(test: TestResult): boolean;
     _getOutcomeIcon(testCase: TestResult): ":construction:" | ":white_check_mark:" | ":x:";
     _printSuite(s: TestSuite): void;

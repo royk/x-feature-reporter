@@ -280,6 +280,11 @@ test.describe("Features", () => {
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedContent);
     });
+    test("[regression] tests nest correctly", () => {
+      const json = {"title":"","transparent":true,"suites":[{"title":"no-browser","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":[],"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]}],"tests":[]};
+      reporter._printSuite(json as TestSuite);
+      expect(reporter._getStringBuilder()).toBe(`## Features\n  ### Suite A\n  - ${passingEmoji} Test A\n  ### Suite B\n  - ${passingEmoji} Test B\n`);
+    });
   });
   
   test.describe("Options", () => {

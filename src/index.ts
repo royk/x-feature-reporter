@@ -43,6 +43,10 @@ export class XFeatureReporter {
     return suite;
   }
 
+  _getStringBuilder() {
+    return this.stringBuilder;
+  }
+
   _willPrintTest(test: TestResult) {
     if (test.testType && test.testType !== TEST_TYPE_BEHAVIOR) {
       return;
@@ -65,12 +69,11 @@ export class XFeatureReporter {
   _printSuite(s: TestSuite) {
     const myNestedLevel = this.nestedLevel;
     const headerPrefix = '  '.repeat(myNestedLevel) + '#'.repeat(myNestedLevel+2);
-    
     if (s.tests.length === 0 && s.suites.length === 0) {
       return;
     }
-    const isTransparent = s.transparent===null || !s.transparent;
-    if (isTransparent) {
+    const isNotTransparent = s.transparent===null || !s.transparent;
+    if (isNotTransparent) {
       const printableTests = s.tests.filter((test) => this._willPrintTest(test));
       // if there are no tests and no nested suites, don't print the suite
       // TODO: Consider differentiating between no tests and no printable tests
@@ -102,7 +105,7 @@ export class XFeatureReporter {
     s.suites.forEach((ss) => {
       this._printSuite(ss);
     });
-    if (!isTransparent) {
+    if (isNotTransparent) {
       this.nestedLevel--;
     }
   }
