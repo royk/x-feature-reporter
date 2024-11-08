@@ -12,7 +12,7 @@ The below features section was generated using [Playwright-feature-reporter](htt
   - :white_check_mark: Suites with the same name have their results merged, and the heading is shown only once
   - :white_check_mark: Suites containing only non-behavioral tests are not shown in the report
   ### TestResults (features)
-  - :white_check_mark: TestResults appear as list items representing features. Each feature is visually marked as Passing :white_check_mark:, Failing :x: or Skipped :construction:
+  - :white_check_mark: TestResults appear as list items representing features. Each feature is visually marked as Passing ✅, Failing ❌ or Skipped 🚧
   - :white_check_mark: Only TestResults with testType 'behavior' appear as features. If testType is note specified, it's assumed to be 'behavior'
   - :white_check_mark: Features can nest under other features using a '-' prefix
     - :white_check_mark: Features can nest multiple levels deep using multiple '-' prefixes

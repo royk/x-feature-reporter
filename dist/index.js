@@ -3,8 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.XFeatureReporter = exports.defaultEmbeddingPlaceholder = exports.TEST_TYPE_BEHAVIOR = void 0;
+exports.XFeatureReporter = exports.defaultEmbeddingPlaceholder = exports.TEST_TYPE_BEHAVIOR = exports.TEST_PREFIX_FAILED = exports.TEST_PREFIX_PASSED = exports.TEST_PREFIX_SKIPPED = void 0;
 const fs_1 = __importDefault(require("fs"));
+exports.TEST_PREFIX_SKIPPED = '🚧';
+exports.TEST_PREFIX_PASSED = '✅';
+exports.TEST_PREFIX_FAILED = '❌';
 exports.TEST_TYPE_BEHAVIOR = 'behavior';
 exports.defaultEmbeddingPlaceholder = 'x-feature-reporter';
 class XFeatureReporter {
@@ -41,11 +44,11 @@ class XFeatureReporter {
     _getOutcomeIcon(testCase) {
         switch (testCase.status) {
             case 'skipped':
-                return ':construction:';
+                return exports.TEST_PREFIX_SKIPPED;
             case 'passed':
-                return ':white_check_mark:';
+                return exports.TEST_PREFIX_PASSED;
             case 'failed':
-                return ':x:';
+                return exports.TEST_PREFIX_FAILED;
         }
         return testCase.status;
     }
