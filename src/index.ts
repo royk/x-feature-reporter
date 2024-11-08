@@ -17,6 +17,10 @@ export type XFeatureReporterOptions = {
   fullReportLink?: string;
 };
 
+export const TEST_PREFIX_SKIPPED = '🚧';
+export const TEST_PREFIX_PASSED = '✅';
+export const TEST_PREFIX_FAILED = '❌';
+
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 
 export const defaultEmbeddingPlaceholder = 'x-feature-reporter';
@@ -57,11 +61,11 @@ export class XFeatureReporter {
   _getOutcomeIcon(testCase: TestResult) {
     switch (testCase.status) {
       case 'skipped':
-        return ':construction:';
+        return TEST_PREFIX_SKIPPED;
       case 'passed':
-        return ':white_check_mark:';
+        return TEST_PREFIX_PASSED;
       case 'failed':
-        return ':x:';
+        return TEST_PREFIX_FAILED;
     }
     return testCase.status;
   }

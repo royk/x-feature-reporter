@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import sinon from 'sinon';
 import fs from 'fs';
-import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR, XFeatureReporterOptions } from './index';
+import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR, XFeatureReporterOptions, TEST_PREFIX_PASSED, TEST_PREFIX_FAILED, TEST_PREFIX_SKIPPED } from './index';
 
 
 let writeFileSyncStub: sinon.SinonStub;
@@ -10,9 +10,6 @@ const featureTitle = 'Feature title';
 const subfeatureTitle = 'Subfeature title';
 const caseTitle = 'case title';
 const caseTitle2 = 'case title 2';
-const passingEmoji = ':white_check_mark:';
-const failingEmoji = ':x:';
-const skippedEmoji = ':construction:';
 const outputFile = 'output.md';
 
 let reporter: XFeatureReporter;
@@ -55,7 +52,7 @@ test.describe("Features", () => {
       testSuite2.tests.push(testCase);
       reporter.generateReport(outputFile, testSuite);
 
-      const expectedMarkdown = `\n## ${featureTitle}\n  ### ${subfeatureTitle}\n  - ${passingEmoji} ${caseTitle}\n`;
+      const expectedMarkdown = `\n## ${featureTitle}\n  ### ${subfeatureTitle}\n  - ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       
       expect(actualMarkdown).toBe(expectedMarkdown);
@@ -82,7 +79,7 @@ test.describe("Features", () => {
       testSuite.tests.push(testCase);
       reporter.generateReport(outputFile, rootSuite);
   
-      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n`;
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       
       expect(actualMarkdown).toBe(expectedMarkdown);
@@ -121,7 +118,7 @@ test.describe("Features", () => {
       testSuite2.tests.push(testCase2);
       reporter.generateReport(outputFile, rootSuite);
 
-      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n- ${passingEmoji} ${caseTitle2}\n`;
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
@@ -144,7 +141,7 @@ test.describe("Features", () => {
     });
   });
   test.describe("TestResults (features)", () => {
-    test(`TestResults appear as list items representing features. Each feature is visually marked as Passing ${passingEmoji}, Failing ${failingEmoji} or Skipped ${skippedEmoji}`, () => {
+    test(`TestResults appear as list items representing features. Each feature is visually marked as Passing ${TEST_PREFIX_PASSED}, Failing ${TEST_PREFIX_FAILED} or Skipped ${TEST_PREFIX_SKIPPED}`, () => {
       const testSuite: TestSuite = {
         title: featureTitle,
         suites: [],
@@ -161,7 +158,7 @@ test.describe("Features", () => {
       testSuite.tests.push(failedCase);
       testSuite.tests.push(skippedCase);
       reporter.generateReport(outputFile, testSuite);
-      const expectedMarkdown = `\n## ${featureTitle}\n- ${failingEmoji} ${caseTitle}\n- ${skippedEmoji} ${caseTitle2}\n`;
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_FAILED} ${caseTitle}\n- ${TEST_PREFIX_SKIPPED} ${caseTitle2}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
@@ -183,7 +180,7 @@ test.describe("Features", () => {
       testSuite.tests.push(testCase1);
       testSuite.tests.push(testCase2);
       reporter.generateReport(outputFile, testSuite);
-      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle2}\n`;
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
@@ -205,7 +202,7 @@ test.describe("Features", () => {
       testSuite.tests.push(testCase1);
       testSuite.tests.push(testCase2);
       reporter.generateReport(outputFile, testSuite);
-      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n  - ${passingEmoji} ${caseTitle2}\n`;
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n  - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
@@ -227,7 +224,7 @@ test.describe("Features", () => {
       testSuite.tests.push(testCase1);
       testSuite.tests.push(testCase2);
       reporter.generateReport(outputFile, testSuite);
-      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n    - ${passingEmoji} ${caseTitle2}\n`;
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n    - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
@@ -253,7 +250,7 @@ test.describe("Features", () => {
       sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd+additionalContent);
       
       reporter.generateReport(outputFile, testSuite);
-      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n`;
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
       const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd + additionalContent;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedContent);
@@ -275,7 +272,7 @@ test.describe("Features", () => {
       sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd);
 
       reporter.generateReport(outputFile, testSuite);
-      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n`;
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
       const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedContent);
@@ -283,7 +280,7 @@ test.describe("Features", () => {
     test("[regression] tests nest correctly", () => {
       const json = {"title":"","transparent":true,"suites":[{"title":"no-browser","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":[],"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]}],"tests":[]};
       reporter._printSuite(json as TestSuite);
-      expect(reporter._getStringBuilder()).toBe(`## Features\n  ### Suite A\n  - ${passingEmoji} Test A\n  ### Suite B\n  - ${passingEmoji} Test B\n`);
+      expect(reporter._getStringBuilder()).toBe(`## Features\n  ### Suite A\n  - ${TEST_PREFIX_PASSED} Test A\n  ### Suite B\n  - ${TEST_PREFIX_PASSED} Test B\n`);
     });
   });
   
@@ -309,7 +306,7 @@ test.describe("Features", () => {
       sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd);
       const options = {embeddingPlaceholder: customEmbeddingPlaceholder} as XFeatureReporterOptions;
       reporter.generateReport(outputFile, testSuite, options);
-      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n`;
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
       const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedContent);
@@ -330,7 +327,7 @@ test.describe("Features", () => {
       const options = {fullReportLink: fullReportLink} as XFeatureReporterOptions;
       reporter.generateReport(outputFile, testSuite, options);
 
-      const expectedMarkdown = `\n## ${featureTitle}\n- ${passingEmoji} ${caseTitle}\n\n[Test report](${fullReportLink})\n`;
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n\n[Test report](${fullReportLink})\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       
       expect(actualMarkdown).toBe(expectedMarkdown);
