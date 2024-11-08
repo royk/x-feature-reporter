@@ -19,9 +19,8 @@ The below features section was generated using [Playwright-feature-reporter](htt
   ### Embedding
   - :white_check_mark: The features list is embedded in an existing file between placeholders
   - :white_check_mark: The closing placeholder can be ommitted if the feature list is intended as the last content in the file
-  - :white_check_mark: [regression] tests nest correctly
   ### Options
   - :white_check_mark: Placeholder prefix can be specified using the 'embeddingPlaceholder' option
   - :white_check_mark: A link to a full test report will be included when the 'fullReportLink' option is provided
 
-[Test report](playwright-report/index.html)
+[Test report](https://raw.githack.com/royk/x-feature-reporter/refs/heads/main/playwright-report/index.html)
