@@ -355,4 +355,7 @@ test.describe("JSON generation", () => {
     const fileContent = writeFileSyncStub.getCall(0)?.args[1];
     expect(fileContent).toBe(JSON.stringify(json));
   });
+  test.skip("Suites can be marked as transparent: They will not be printed but their children will be printed", () => {
+    // TODO: Implement
+  });
 });
