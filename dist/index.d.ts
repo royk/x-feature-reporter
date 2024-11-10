@@ -23,14 +23,7 @@ export declare const TEST_TYPE_BEHAVIOR = "behavior";
 export declare const defaultEmbeddingPlaceholder = "x-feature-reporter";
 export declare class XFeatureReporter {
     constructor(options: XOptions | undefined);
-    private nestedLevel;
-    private stringBuilder;
     private options;
     _mergeSuites(suite: TestSuite, suiteStructure: Record<string, TestSuite>): TestSuite;
-    _getStringBuilder(): string;
-    _willPrintTest(test: TestResult): boolean;
-    _getOutcomeIcon(testCase: TestResult): "🚧" | "✅" | "❌";
-    _printSuite(s: TestSuite): void;
-    _generateMarkdown(outputFile: string, options?: XFeatureReporterOptions): void;
     generateReport(outputFile: string, results: TestSuite, options?: XFeatureReporterOptions): void;
 }

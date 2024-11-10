@@ -25,4 +25,4 @@ The below features section was generated using [Playwright-feature-reporter](htt
 ## JSON generation
 - :white_check_mark: Generates a JSON file
 
-[Test report](playwright-report/index.html)
+[Test report](https://raw.githack.com/royk/x-feature-reporter/refs/heads/main/playwright-report/index.html)
