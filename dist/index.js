@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.XFeatureReporter = exports.defaultEmbeddingPlaceholder = exports.TEST_TYPE_BEHAVIOR = exports.TEST_PREFIX_FAILED = exports.TEST_PREFIX_PASSED = exports.TEST_PREFIX_SKIPPED = void 0;
 const fs_1 = __importDefault(require("fs"));
+const json_1 = __importDefault(require("./adapters/json"));
 exports.TEST_PREFIX_SKIPPED = '🚧';
 exports.TEST_PREFIX_PASSED = '✅';
 exports.TEST_PREFIX_FAILED = '❌';
@@ -12,8 +13,12 @@ exports.TEST_TYPE_BEHAVIOR = 'behavior';
 exports.defaultEmbeddingPlaceholder = 'x-feature-reporter';
 class XFeatureReporter {
     constructor(options) {
+    constructor(options) {
         this.nestedLevel = 0;
         this.stringBuilder = '';
+        this.options = options || {
+            outputType: 'markdown'
+        };
         this.options = options || {
             outputType: 'markdown'
         };
@@ -126,8 +131,7 @@ class XFeatureReporter {
             this._generateMarkdown(outputFile, options);
         }
         else {
-            this.stringBuilder = JSON.stringify(mergedSuite);
-            fs_1.default.writeFileSync(outputFile, this.stringBuilder);
+            new json_1.default().generateReport(outputFile, mergedSuite);
         }
     }
 }

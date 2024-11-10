@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import sinon from 'sinon';
 import fs from 'fs';
 import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR, XFeatureReporterOptions, TEST_PREFIX_PASSED, TEST_PREFIX_FAILED, TEST_PREFIX_SKIPPED, XOptions } from './index';
+import MarkdownAdapter from './adapters/markdown';
 
 
 let writeFileSyncStub: sinon.SinonStub;
@@ -35,8 +36,9 @@ test.describe("Markdown generation", () => {
     test("tests nest correctly", 
       {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
       const json = {"title":"","transparent":true,"suites":[{"title":"no-browser","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":[],"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]}],"tests":[]};
-      reporter._printSuite(json as TestSuite);
-      expect(reporter._getStringBuilder()).toBe(`## Features\n  ### Suite A\n  - ${TEST_PREFIX_PASSED} Test A\n  ### Suite B\n  - ${TEST_PREFIX_PASSED} Test B\n`);
+      const mdAdapter = new MarkdownAdapter();
+      mdAdapter._printSuite(json as TestSuite);
+      expect(mdAdapter._getStringBuilder()).toBe(`## Features\n  ### Suite A\n  - ${TEST_PREFIX_PASSED} Test A\n  ### Suite B\n  - ${TEST_PREFIX_PASSED} Test B\n`);
     });
     test("Suites appear as headings. Nested Suites are nested headings", () => {
       const testSuite: TestSuite = {
