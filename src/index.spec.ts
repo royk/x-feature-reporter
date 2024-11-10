@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 import sinon from 'sinon';
 import fs from 'fs';
-import {XFeatureReporter, TestSuite, TestResult, XFeatureReporterOptions, XOptions, TEST_TYPE_BEHAVIOR } from './index';
-import MarkdownAdapter, { TEST_PREFIX_FAILED, TEST_PREFIX_PASSED, TEST_PREFIX_SKIPPED } from './adapters/markdown';
+import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR } from './index';
+import MarkdownAdapter, { TEST_PREFIX_FAILED, TEST_PREFIX_PASSED, TEST_PREFIX_SKIPPED, MarkdownAdapterOptions } from './adapters/markdown';
 import JsonAdapter from './adapters/json';
 
 
@@ -292,7 +292,7 @@ test.describe("Markdown generation", () => {
       const customEmbeddingPlaceholder = 'custom-feature-reporter';
       const embeddingPlaceholder = `<!-- ${customEmbeddingPlaceholder}--start -->`;
       const embeddingPlaceholderEnd = `<!-- ${customEmbeddingPlaceholder}--end -->`;
-      const options = {embeddingPlaceholder: customEmbeddingPlaceholder} as XFeatureReporterOptions;
+      const options = {embeddingPlaceholder: customEmbeddingPlaceholder} as MarkdownAdapterOptions;
       reporter = new XFeatureReporter(undefined, options);
 
       const initialContent = "This is static content";
@@ -318,7 +318,7 @@ test.describe("Markdown generation", () => {
     });
     test("A link to a full test report will be included when the 'fullReportLink' option is provided", () => {
       const fullReportLink = 'full-report.html';
-      const options = {fullReportLink: fullReportLink} as XFeatureReporterOptions;
+      const options = {fullReportLink: fullReportLink} as MarkdownAdapterOptions;
       reporter = new XFeatureReporter(undefined, options);
       const testSuite: TestSuite = {
         title: featureTitle,

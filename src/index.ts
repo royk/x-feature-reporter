@@ -12,10 +12,7 @@ export type TestResult = {
   testType?: string;
 };
 
-export type XFeatureReporterOptions = {
-  embeddingPlaceholder?: string;
-  fullReportLink?: string;
-};
+
 
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 

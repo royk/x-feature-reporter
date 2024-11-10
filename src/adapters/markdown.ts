@@ -1,4 +1,4 @@
-import { TEST_TYPE_BEHAVIOR, TestResult, TestSuite, XAdapter, XFeatureReporterOptions } from "..";
+import { TEST_TYPE_BEHAVIOR, TestResult, TestSuite, XAdapter } from "..";
 import fs from 'fs';
 
 export const TEST_PREFIX_SKIPPED = '🚧';
@@ -7,6 +7,11 @@ export const TEST_PREFIX_FAILED = '❌';
 
 
 export const defaultEmbeddingPlaceholder = 'x-feature-reporter';
+
+export type MarkdownAdapterOptions = {
+    embeddingPlaceholder?: string;
+    fullReportLink?: string;
+  };
 
 export default class MarkdownAdapter implements XAdapter {
     private nestedLevel = 0;
@@ -77,7 +82,7 @@ export default class MarkdownAdapter implements XAdapter {
           this.nestedLevel--;
         }
       }
-      _generateMarkdown(outputFile: string, options?: XFeatureReporterOptions) {
+      _generateMarkdown(outputFile: string, options?: MarkdownAdapterOptions) {
         const existingContent = fs.existsSync(outputFile) ? fs.readFileSync(outputFile, 'utf8') : '';
         const embeddingPlaceholder = options?.embeddingPlaceholder || defaultEmbeddingPlaceholder;
         const embeddingPlaceholderStart = `<!-- ${embeddingPlaceholder}--start -->`;
@@ -94,7 +99,7 @@ export default class MarkdownAdapter implements XAdapter {
           fs.writeFileSync(outputFile, this.stringBuilder);
         }
       }
-    generateReport(outputFile: string, results: TestSuite, options?: XFeatureReporterOptions) {
+    generateReport(outputFile: string, results: TestSuite, options?: MarkdownAdapterOptions) {
         this.stringBuilder = '\n';
         this.nestedLevel = 0;
         this._printSuite(results);
