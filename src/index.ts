@@ -19,7 +19,7 @@ export interface XAdapter {
 }
 export class XFeatureReporter {
   constructor(outputAdapter?: XAdapter) {
-    this.outputAdapter = outputAdapter || new MarkdownAdapter({outputFile: 'report.md'});
+    this.outputAdapter = outputAdapter || new MarkdownAdapter();
   }
   
   private outputAdapter: XAdapter;

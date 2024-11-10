@@ -11,14 +11,14 @@ export const defaultEmbeddingPlaceholder = 'x-feature-reporter';
 export type MarkdownAdapterOptions = {
     embeddingPlaceholder?: string;
     fullReportLink?: string;
-    outputFile?: string;
+    outputFile: string;
 };
 
 export default class MarkdownAdapter implements XAdapter {
     constructor(adapterOptions?: MarkdownAdapterOptions) {
-        this.adapterOptions = adapterOptions;
+        this.adapterOptions = adapterOptions || {outputFile: 'report.md'};
     }
-    private adapterOptions?: MarkdownAdapterOptions;
+    private adapterOptions: MarkdownAdapterOptions;
     private nestedLevel = 0;
     private stringBuilder = '';
     _getStringBuilder() {
@@ -87,9 +87,9 @@ export default class MarkdownAdapter implements XAdapter {
           this.nestedLevel--;
         }
       }
-      _generateMarkdown(outputFile: string, options?: MarkdownAdapterOptions) {
+      _generateMarkdown(outputFile: string, options: MarkdownAdapterOptions) {
         const existingContent = fs.existsSync(outputFile) ? fs.readFileSync(outputFile, 'utf8') : '';
-        const embeddingPlaceholder = options?.embeddingPlaceholder || defaultEmbeddingPlaceholder;
+        const embeddingPlaceholder = options.embeddingPlaceholder || defaultEmbeddingPlaceholder;
         const embeddingPlaceholderStart = `<!-- ${embeddingPlaceholder}--start -->`;
         const embeddingPlaceholderEnd = `<!-- ${embeddingPlaceholder}--end -->`;
         if (existingContent.includes(embeddingPlaceholderStart)) {
@@ -108,9 +108,9 @@ export default class MarkdownAdapter implements XAdapter {
         this.stringBuilder = '\n';
         this.nestedLevel = 0;
         this._printSuite(results);
-        if (this.adapterOptions?.fullReportLink) {
+        if (this.adapterOptions.fullReportLink) {
             this.stringBuilder += `\n[Test report](${this.adapterOptions.fullReportLink})\n`;
         }
-        this._generateMarkdown(this.adapterOptions?.outputFile, this.adapterOptions);
+        this._generateMarkdown(this.adapterOptions.outputFile, this.adapterOptions);
     }
 }   
