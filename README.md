@@ -5,7 +5,7 @@ Not intended to be used directly. Rather, use it as a base for your custom repor
 The below features section was generated using [Playwright-feature-reporter](https://github.com/royk/playwright-feature-reporter), which is based on this library.
 
 <!-- playwright-feature-reporter--start -->
-## Features
+## Markdown generation
   ### Suites (headings)
   - :white_check_mark: Suites appear as headings. Nested Suites are nested headings
   - :white_check_mark: Suites can be marked as transparent: They will not be printed but their children will be printed
@@ -22,5 +22,7 @@ The below features section was generated using [Playwright-feature-reporter](htt
   ### Options
   - :white_check_mark: Placeholder prefix can be specified using the 'embeddingPlaceholder' option
   - :white_check_mark: A link to a full test report will be included when the 'fullReportLink' option is provided
+## JSON generation
+- :white_check_mark: Generates a JSON file
 
 [Test report](https://raw.githack.com/royk/x-feature-reporter/refs/heads/main/playwright-report/index.html)

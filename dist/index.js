@@ -11,9 +11,12 @@ exports.TEST_PREFIX_FAILED = '❌';
 exports.TEST_TYPE_BEHAVIOR = 'behavior';
 exports.defaultEmbeddingPlaceholder = 'x-feature-reporter';
 class XFeatureReporter {
-    constructor() {
+    constructor(options) {
         this.nestedLevel = 0;
         this.stringBuilder = '';
+        this.options = options || {
+            outputType: 'markdown'
+        };
         this.nestedLevel = 0;
         this.stringBuilder = '';
     }
@@ -113,13 +116,19 @@ class XFeatureReporter {
     }
     generateReport(outputFile, results, options) {
         const mergedSuite = this._mergeSuites(results, {});
-        this.stringBuilder = '\n';
-        this.nestedLevel = 0;
-        this._printSuite(mergedSuite);
-        if (options === null || options === void 0 ? void 0 : options.fullReportLink) {
-            this.stringBuilder += `\n[Test report](${options.fullReportLink})\n`;
+        if (this.options.outputType === 'markdown') {
+            this.stringBuilder = '\n';
+            this.nestedLevel = 0;
+            this._printSuite(mergedSuite);
+            if (options === null || options === void 0 ? void 0 : options.fullReportLink) {
+                this.stringBuilder += `\n[Test report](${options.fullReportLink})\n`;
+            }
+            this._generateMarkdown(outputFile, options);
         }
-        this._generateMarkdown(outputFile, options);
+        else {
+            this.stringBuilder = JSON.stringify(mergedSuite);
+            fs_1.default.writeFileSync(outputFile, this.stringBuilder);
+        }
     }
 }
 exports.XFeatureReporter = XFeatureReporter;
