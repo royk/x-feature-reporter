@@ -3,12 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.defaultEmbeddingPlaceholder = exports.TEST_PREFIX_FAILED = exports.TEST_PREFIX_PASSED = exports.TEST_PREFIX_SKIPPED = void 0;
 const __1 = require("..");
 const fs_1 = __importDefault(require("fs"));
+exports.TEST_PREFIX_SKIPPED = '🚧';
+exports.TEST_PREFIX_PASSED = '✅';
+exports.TEST_PREFIX_FAILED = '❌';
+exports.defaultEmbeddingPlaceholder = 'x-feature-reporter';
 class MarkdownAdapter {
-    constructor() {
+    constructor(adapterOptions) {
         this.nestedLevel = 0;
         this.stringBuilder = '';
+        this.adapterOptions = adapterOptions || { outputFile: 'report.md' };
     }
     _getStringBuilder() {
         return this.stringBuilder;
@@ -22,11 +28,11 @@ class MarkdownAdapter {
     _getOutcomeIcon(testCase) {
         switch (testCase.status) {
             case 'skipped':
-                return __1.TEST_PREFIX_SKIPPED;
+                return exports.TEST_PREFIX_SKIPPED;
             case 'passed':
-                return __1.TEST_PREFIX_PASSED;
+                return exports.TEST_PREFIX_PASSED;
             case 'failed':
-                return __1.TEST_PREFIX_FAILED;
+                return exports.TEST_PREFIX_FAILED;
         }
         return testCase.status;
     }
@@ -73,7 +79,7 @@ class MarkdownAdapter {
     }
     _generateMarkdown(outputFile, options) {
         const existingContent = fs_1.default.existsSync(outputFile) ? fs_1.default.readFileSync(outputFile, 'utf8') : '';
-        const embeddingPlaceholder = (options === null || options === void 0 ? void 0 : options.embeddingPlaceholder) || __1.defaultEmbeddingPlaceholder;
+        const embeddingPlaceholder = options.embeddingPlaceholder || exports.defaultEmbeddingPlaceholder;
         const embeddingPlaceholderStart = `<!-- ${embeddingPlaceholder}--start -->`;
         const embeddingPlaceholderEnd = `<!-- ${embeddingPlaceholder}--end -->`;
         if (existingContent.includes(embeddingPlaceholderStart)) {
@@ -89,14 +95,14 @@ class MarkdownAdapter {
             fs_1.default.writeFileSync(outputFile, this.stringBuilder);
         }
     }
-    generateReport(outputFile, results, options) {
+    generateReport(results) {
         this.stringBuilder = '\n';
         this.nestedLevel = 0;
         this._printSuite(results);
-        if (options === null || options === void 0 ? void 0 : options.fullReportLink) {
-            this.stringBuilder += `\n[Test report](${options.fullReportLink})\n`;
+        if (this.adapterOptions.fullReportLink) {
+            this.stringBuilder += `\n[Test report](${this.adapterOptions.fullReportLink})\n`;
         }
-        this._generateMarkdown(outputFile, options);
+        this._generateMarkdown(this.adapterOptions.outputFile, this.adapterOptions);
     }
 }
 exports.default = MarkdownAdapter;

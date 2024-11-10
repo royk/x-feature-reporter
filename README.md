@@ -24,5 +24,6 @@ The below features section was generated using [Playwright-feature-reporter](htt
   - :white_check_mark: A link to a full test report will be included when the 'fullReportLink' option is provided
 ## JSON generation
 - :white_check_mark: Generates a JSON file
+- :construction: Suites can be marked as transparent: They will not be printed but their children will be printed
 
 [Test report](https://raw.githack.com/royk/x-feature-reporter/refs/heads/main/playwright-report/index.html)
