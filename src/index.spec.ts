@@ -291,7 +291,7 @@ test.describe("Markdown generation", () => {
       const customEmbeddingPlaceholder = 'custom-feature-reporter';
       const embeddingPlaceholder = `<!-- ${customEmbeddingPlaceholder}--start -->`;
       const embeddingPlaceholderEnd = `<!-- ${customEmbeddingPlaceholder}--end -->`;
-      reporter = new XFeatureReporter(new MarkdownAdapter({embeddingPlaceholder:customEmbeddingPlaceholder}));
+      reporter = new XFeatureReporter(new MarkdownAdapter({outputFile: 'report.md', embeddingPlaceholder:customEmbeddingPlaceholder}));
 
       const initialContent = "This is static content";
       const oldContent = "this is old generated content";
@@ -316,7 +316,7 @@ test.describe("Markdown generation", () => {
     });
     test("A link to a full test report will be included when the 'fullReportLink' option is provided", () => {
       const fullReportLink = 'full-report.html';
-      reporter = new XFeatureReporter(new MarkdownAdapter({fullReportLink}));
+      reporter = new XFeatureReporter(new MarkdownAdapter({outputFile: 'report.md', fullReportLink}));
       const testSuite: TestSuite = {
         title: featureTitle,
         suites: [],
