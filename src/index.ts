@@ -25,6 +25,10 @@ export type XOptions = {
 
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 
+export interface XAdapter {
+  generateReport(outputFile: string, results: TestSuite, options?: any): void;
+}
+
 
 export class XFeatureReporter {
   constructor(options: XOptions | undefined) {

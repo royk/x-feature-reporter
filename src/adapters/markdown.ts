@@ -1,4 +1,4 @@
-import { TEST_TYPE_BEHAVIOR, TestResult, TestSuite, XFeatureReporterOptions } from "..";
+import { TEST_TYPE_BEHAVIOR, TestResult, TestSuite, XAdapter, XFeatureReporterOptions } from "..";
 import fs from 'fs';
 
 export const TEST_PREFIX_SKIPPED = '🚧';
@@ -8,7 +8,7 @@ export const TEST_PREFIX_FAILED = '❌';
 
 export const defaultEmbeddingPlaceholder = 'x-feature-reporter';
 
-export default class MarkdownAdapter {
+export default class MarkdownAdapter implements XAdapter {
     private nestedLevel = 0;
     private stringBuilder = '';
     _getStringBuilder() {
