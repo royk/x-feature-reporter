@@ -1,4 +1,5 @@
 import fs from 'fs';
+import JsonAdapter from './adapters/json';
 
 export type TestSuite = {
   title: string;
@@ -150,8 +151,7 @@ export class XFeatureReporter {
       }
       this._generateMarkdown(outputFile, options);
     } else {
-      this.stringBuilder = JSON.stringify(mergedSuite);
-      fs.writeFileSync(outputFile, this.stringBuilder);
+      new JsonAdapter().generateReport(outputFile, mergedSuite);
     }
   }
 }
