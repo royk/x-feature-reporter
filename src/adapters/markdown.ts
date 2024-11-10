@@ -11,9 +11,13 @@ export const defaultEmbeddingPlaceholder = 'x-feature-reporter';
 export type MarkdownAdapterOptions = {
     embeddingPlaceholder?: string;
     fullReportLink?: string;
-  };
+};
 
 export default class MarkdownAdapter implements XAdapter {
+    constructor(adapterOptions?: MarkdownAdapterOptions) {
+        this.adapterOptions = adapterOptions;
+    }
+    private adapterOptions?: MarkdownAdapterOptions;
     private nestedLevel = 0;
     private stringBuilder = '';
     _getStringBuilder() {
@@ -99,13 +103,13 @@ export default class MarkdownAdapter implements XAdapter {
           fs.writeFileSync(outputFile, this.stringBuilder);
         }
       }
-    generateReport(outputFile: string, results: TestSuite, options?: MarkdownAdapterOptions) {
+    generateReport(outputFile: string, results: TestSuite) {
         this.stringBuilder = '\n';
         this.nestedLevel = 0;
         this._printSuite(results);
-        if (options?.fullReportLink) {
-            this.stringBuilder += `\n[Test report](${options.fullReportLink})\n`;
+        if (this.adapterOptions?.fullReportLink) {
+            this.stringBuilder += `\n[Test report](${this.adapterOptions.fullReportLink})\n`;
         }
-        this._generateMarkdown(outputFile, options);
+        this._generateMarkdown(outputFile, this.adapterOptions);
     }
 }   

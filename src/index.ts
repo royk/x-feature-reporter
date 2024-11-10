@@ -17,18 +17,16 @@ export type TestResult = {
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 
 export interface XAdapter {
-  generateReport(outputFile: string, results: TestSuite, options?: any): void;
+  generateReport(outputFile: string, results: TestSuite): void;
 }
 
 
 export class XFeatureReporter {
-  constructor(outputAdapter?: XAdapter | null, adapterOptions?: any | null) {
-    this.outputAdapter = outputAdapter || new MarkdownAdapter();
-    this.adapterOptions = adapterOptions;
+  constructor(outputAdapter?: XAdapter, adapterOptions?: any) {
+    this.outputAdapter = outputAdapter || new MarkdownAdapter(adapterOptions);
   }
   
   private outputAdapter: XAdapter;
-  private adapterOptions?: any;
 
   _mergeSuites(suite: TestSuite, suiteStructure: Record<string, TestSuite>) {
     if (suiteStructure[suite.title]) {
@@ -47,6 +45,6 @@ export class XFeatureReporter {
 
   generateReport(outputFile: string, results: TestSuite) {
     const mergedSuite = this._mergeSuites(results, {});
-    this.outputAdapter.generateReport(outputFile, mergedSuite, this.adapterOptions);
+    this.outputAdapter.generateReport(outputFile, mergedSuite);
   }
 }
