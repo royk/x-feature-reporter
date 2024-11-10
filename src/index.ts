@@ -17,6 +17,10 @@ export type XFeatureReporterOptions = {
   fullReportLink?: string;
 };
 
+export type XOptions = {
+  outputType: 'markdown' | 'json' | undefined;
+};
+
 export const TEST_PREFIX_SKIPPED = '🚧';
 export const TEST_PREFIX_PASSED = '✅';
 export const TEST_PREFIX_FAILED = '❌';
@@ -26,12 +30,16 @@ export const TEST_TYPE_BEHAVIOR = 'behavior';
 export const defaultEmbeddingPlaceholder = 'x-feature-reporter';
 
 export class XFeatureReporter {
-  constructor() {
+  constructor(options: XOptions | undefined) {
+    this.options = options || {
+      outputType: 'markdown'
+    };
     this.nestedLevel = 0;
     this.stringBuilder = '';
   }
   private nestedLevel = 0;
   private stringBuilder = '';
+  private options: XOptions;
   _mergeSuites(suite: TestSuite, suiteStructure: Record<string, TestSuite>) {
     if (suiteStructure[suite.title]) {
       suiteStructure[suite.title].tests.push(...suite.tests);

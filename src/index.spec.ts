@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import sinon from 'sinon';
 import fs from 'fs';
-import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR, XFeatureReporterOptions, TEST_PREFIX_PASSED, TEST_PREFIX_FAILED, TEST_PREFIX_SKIPPED } from './index';
+import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR, XFeatureReporterOptions, TEST_PREFIX_PASSED, TEST_PREFIX_FAILED, TEST_PREFIX_SKIPPED, XOptions } from './index';
 
 
 let writeFileSyncStub: sinon.SinonStub;
@@ -14,17 +14,17 @@ const outputFile = 'output.md';
 
 let reporter: XFeatureReporter;
 
-test.beforeEach(() => {
-  writeFileSyncStub = sinon.stub(fs, 'writeFileSync');
-  writeFileSyncStub.returns(undefined);
-  reporter = new XFeatureReporter();
-});
-
-test.afterEach(() => {
-  sinon.restore(); 
-});
-
-test.describe("Features", () => {
+test.describe("Markdown generation", () => {
+  test.beforeEach(() => {
+    writeFileSyncStub = sinon.stub(fs, 'writeFileSync');
+    writeFileSyncStub.returns(undefined);
+    reporter = new XFeatureReporter({
+      outputType: 'markdown'
+    } as XOptions);
+  });
+  test.afterEach(() => {
+    sinon.restore(); 
+  });
   test.describe("Suites (headings)", () => {
     test("Transparent suites don't affect nesting levels", 
       {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
