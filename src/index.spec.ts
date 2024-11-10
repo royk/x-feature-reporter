@@ -20,7 +20,7 @@ test.describe("Markdown generation", () => {
   test.beforeEach(() => {
     writeFileSyncStub = sinon.stub(fs, 'writeFileSync');
     writeFileSyncStub.returns(undefined);
-    reporter = new XFeatureReporter();
+    reporter = new XFeatureReporter(undefined, {outputFile});
   });
   test.afterEach(() => {
     sinon.restore(); 
@@ -30,7 +30,7 @@ test.describe("Markdown generation", () => {
       {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
       const suite = {"title":"","transparent":true,"suites":[{"title":"Mobile Chrome","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Welcome screen","transparent":false,"suites":[],"tests":[{"title":"Has a button that directs the user to the signup page","status":"passed"}]}],"tests":[]},{"title":"register-screen.spec.ts","transparent":true,"suites":[{"title":"Signup screen","transparent":false,"suites":[],"tests":[{"title":"When the user fills in the form and clicks the signup button, they are taken to the profile creation page","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]};
       // an exception would be thrown if this is not handled correctly (nestedLevel goes below 0)
-      reporter.generateReport(outputFile, suite as TestSuite);
+      reporter.generateReport(suite as TestSuite);
     });
     test("tests nest correctly", 
       {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
@@ -57,7 +57,7 @@ test.describe("Markdown generation", () => {
         testType: TEST_TYPE_BEHAVIOR
       };
       testSuite2.tests.push(testCase);
-      reporter.generateReport(outputFile, testSuite);
+      reporter.generateReport(testSuite);
 
       const expectedMarkdown = `\n## ${featureTitle}\n  ### ${subfeatureTitle}\n  - ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
@@ -84,7 +84,7 @@ test.describe("Markdown generation", () => {
         testType: TEST_TYPE_BEHAVIOR
       };
       testSuite.tests.push(testCase);
-      reporter.generateReport(outputFile, rootSuite);
+      reporter.generateReport(rootSuite);
   
       const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
@@ -123,7 +123,7 @@ test.describe("Markdown generation", () => {
         testType: TEST_TYPE_BEHAVIOR
       };
       testSuite2.tests.push(testCase2);
-      reporter.generateReport(outputFile, rootSuite);
+      reporter.generateReport(rootSuite);
 
       const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
@@ -141,7 +141,7 @@ test.describe("Markdown generation", () => {
         testType: 'edge-case'
       };
       testSuite1.tests.push(testCase1);
-      reporter.generateReport(outputFile, testSuite1);
+      reporter.generateReport(testSuite1);
       const expectedMarkdown = `\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
@@ -164,7 +164,7 @@ test.describe("Markdown generation", () => {
       };
       testSuite.tests.push(failedCase);
       testSuite.tests.push(skippedCase);
-      reporter.generateReport(outputFile, testSuite);
+      reporter.generateReport(testSuite);
       const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_FAILED} ${caseTitle}\n- ${TEST_PREFIX_SKIPPED} ${caseTitle2}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
@@ -186,7 +186,7 @@ test.describe("Markdown generation", () => {
       };
       testSuite.tests.push(testCase1);
       testSuite.tests.push(testCase2);
-      reporter.generateReport(outputFile, testSuite);
+      reporter.generateReport(testSuite);
       const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
@@ -208,7 +208,7 @@ test.describe("Markdown generation", () => {
       };
       testSuite.tests.push(testCase1);
       testSuite.tests.push(testCase2);
-      reporter.generateReport(outputFile, testSuite);
+      reporter.generateReport(testSuite);
       const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n  - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
@@ -230,7 +230,7 @@ test.describe("Markdown generation", () => {
       };
       testSuite.tests.push(testCase1);
       testSuite.tests.push(testCase2);
-      reporter.generateReport(outputFile, testSuite);
+      reporter.generateReport(testSuite);
       const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n    - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
@@ -256,7 +256,7 @@ test.describe("Markdown generation", () => {
       sinon.stub(fs, 'existsSync').returns(true);
       sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd+additionalContent);
       
-      reporter.generateReport(outputFile, testSuite);
+      reporter.generateReport(testSuite);
       const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
       const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd + additionalContent;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
@@ -278,7 +278,7 @@ test.describe("Markdown generation", () => {
       sinon.stub(fs, 'existsSync').returns(true);
       sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd);
 
-      reporter.generateReport(outputFile, testSuite);
+      reporter.generateReport(testSuite);
       const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
       const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
@@ -310,7 +310,7 @@ test.describe("Markdown generation", () => {
       sinon.stub(fs, 'existsSync').returns(true);
       sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd);
       
-      reporter.generateReport(outputFile, testSuite);
+      reporter.generateReport(testSuite);
       const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
       const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
@@ -332,7 +332,7 @@ test.describe("Markdown generation", () => {
       };
       testSuite.tests.push(testCase);
       
-      reporter.generateReport(outputFile, testSuite);
+      reporter.generateReport(testSuite);
 
       const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n\n[Test report](${fullReportLink})\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
@@ -346,7 +346,7 @@ test.describe("JSON generation", () => {
   test.beforeEach(() => {
     writeFileSyncStub = sinon.stub(fs, 'writeFileSync');
     writeFileSyncStub.returns(undefined);
-    reporter = new XFeatureReporter(new JsonAdapter());
+    reporter = new XFeatureReporter(new JsonAdapter(), {outputFile});
   });
   test.afterEach(() => {
     sinon.restore(); 
@@ -354,7 +354,7 @@ test.describe("JSON generation", () => {
   test("Generates a JSON file", () => {
     const json = {"title":"","transparent":true,"suites":[{"title":"no-browser","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":[],"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]}],"tests":[]};
     const suite = json as TestSuite;
-    reporter.generateReport(outputFile, suite as TestSuite);
+    reporter.generateReport(suite as TestSuite);
     const fileContent = writeFileSyncStub.getCall(0)?.args[1];
     expect(fileContent).toBe(JSON.stringify(json));
   });

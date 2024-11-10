@@ -12,15 +12,11 @@ export type TestResult = {
   testType?: string;
 };
 
-
-
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 
 export interface XAdapter {
-  generateReport(outputFile: string, results: TestSuite): void;
+  generateReport(results: TestSuite): void;
 }
-
-
 export class XFeatureReporter {
   constructor(outputAdapter?: XAdapter, adapterOptions?: any) {
     this.outputAdapter = outputAdapter || new MarkdownAdapter(adapterOptions);
@@ -43,8 +39,8 @@ export class XFeatureReporter {
     return suite;
   }
 
-  generateReport(outputFile: string, results: TestSuite) {
+  generateReport(results: TestSuite) {
     const mergedSuite = this._mergeSuites(results, {});
-    this.outputAdapter.generateReport(outputFile, mergedSuite);
+    this.outputAdapter.generateReport(mergedSuite);
   }
 }
