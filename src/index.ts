@@ -23,13 +23,8 @@ export type XOptions = {
   outputType: 'markdown' | 'json' | undefined;
 };
 
-export const TEST_PREFIX_SKIPPED = '🚧';
-export const TEST_PREFIX_PASSED = '✅';
-export const TEST_PREFIX_FAILED = '❌';
-
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 
-export const defaultEmbeddingPlaceholder = 'x-feature-reporter';
 
 export class XFeatureReporter {
   constructor(options: XOptions | undefined) {
@@ -53,7 +48,7 @@ export class XFeatureReporter {
     });
     return suite;
   }
-  
+
   generateReport(outputFile: string, results: TestSuite, options?: XFeatureReporterOptions) {
     const mergedSuite = this._mergeSuites(results, {});
     if (this.options.outputType === 'markdown') {

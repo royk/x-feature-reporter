@@ -1,5 +1,13 @@
-import { defaultEmbeddingPlaceholder, TEST_PREFIX_FAILED, TEST_PREFIX_PASSED, TEST_PREFIX_SKIPPED, TEST_TYPE_BEHAVIOR, TestResult, TestSuite, XFeatureReporterOptions } from "..";
+import { TEST_TYPE_BEHAVIOR, TestResult, TestSuite, XFeatureReporterOptions } from "..";
 import fs from 'fs';
+
+export const TEST_PREFIX_SKIPPED = '🚧';
+export const TEST_PREFIX_PASSED = '✅';
+export const TEST_PREFIX_FAILED = '❌';
+
+
+export const defaultEmbeddingPlaceholder = 'x-feature-reporter';
+
 export default class MarkdownAdapter {
     private nestedLevel = 0;
     private stringBuilder = '';
