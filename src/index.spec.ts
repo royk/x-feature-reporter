@@ -336,3 +336,23 @@ test.describe("Markdown generation", () => {
     });
   });
 });
+
+test.describe("JSON generation", () => {
+  test.beforeEach(() => {
+    writeFileSyncStub = sinon.stub(fs, 'writeFileSync');
+    writeFileSyncStub.returns(undefined);
+    reporter = new XFeatureReporter({
+      outputType: 'json'
+    } as XOptions);
+  });
+  test.afterEach(() => {
+    sinon.restore(); 
+  });
+  test("Generates a JSON file", () => {
+    const json = {"title":"","transparent":true,"suites":[{"title":"no-browser","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":[],"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]}],"tests":[]};
+    const suite = json as TestSuite;
+    reporter.generateReport(outputFile, suite as TestSuite);
+    const fileContent = writeFileSyncStub.getCall(0)?.args[1];
+    expect(fileContent).toBe(JSON.stringify(json));
+  });
+});
