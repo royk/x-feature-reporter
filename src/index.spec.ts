@@ -3,6 +3,7 @@ import sinon from 'sinon';
 import fs from 'fs';
 import {XFeatureReporter, TestSuite, TestResult, XFeatureReporterOptions, XOptions, TEST_TYPE_BEHAVIOR } from './index';
 import MarkdownAdapter, { TEST_PREFIX_FAILED, TEST_PREFIX_PASSED, TEST_PREFIX_SKIPPED } from './adapters/markdown';
+import JsonAdapter from './adapters/json';
 
 
 let writeFileSyncStub: sinon.SinonStub;
@@ -19,9 +20,7 @@ test.describe("Markdown generation", () => {
   test.beforeEach(() => {
     writeFileSyncStub = sinon.stub(fs, 'writeFileSync');
     writeFileSyncStub.returns(undefined);
-    reporter = new XFeatureReporter({
-      outputType: 'markdown'
-    } as XOptions);
+    reporter = new XFeatureReporter();
   });
   test.afterEach(() => {
     sinon.restore(); 
@@ -293,6 +292,8 @@ test.describe("Markdown generation", () => {
       const customEmbeddingPlaceholder = 'custom-feature-reporter';
       const embeddingPlaceholder = `<!-- ${customEmbeddingPlaceholder}--start -->`;
       const embeddingPlaceholderEnd = `<!-- ${customEmbeddingPlaceholder}--end -->`;
+      const options = {embeddingPlaceholder: customEmbeddingPlaceholder} as XFeatureReporterOptions;
+      reporter = new XFeatureReporter(undefined, options);
 
       const initialContent = "This is static content";
       const oldContent = "this is old generated content";
@@ -308,8 +309,8 @@ test.describe("Markdown generation", () => {
       testSuite.tests.push(testCase1);
       sinon.stub(fs, 'existsSync').returns(true);
       sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd);
-      const options = {embeddingPlaceholder: customEmbeddingPlaceholder} as XFeatureReporterOptions;
-      reporter.generateReport(outputFile, testSuite, options);
+      
+      reporter.generateReport(outputFile, testSuite);
       const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
       const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
@@ -317,6 +318,8 @@ test.describe("Markdown generation", () => {
     });
     test("A link to a full test report will be included when the 'fullReportLink' option is provided", () => {
       const fullReportLink = 'full-report.html';
+      const options = {fullReportLink: fullReportLink} as XFeatureReporterOptions;
+      reporter = new XFeatureReporter(undefined, options);
       const testSuite: TestSuite = {
         title: featureTitle,
         suites: [],
@@ -328,8 +331,8 @@ test.describe("Markdown generation", () => {
         testType: TEST_TYPE_BEHAVIOR
       };
       testSuite.tests.push(testCase);
-      const options = {fullReportLink: fullReportLink} as XFeatureReporterOptions;
-      reporter.generateReport(outputFile, testSuite, options);
+      
+      reporter.generateReport(outputFile, testSuite);
 
       const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n\n[Test report](${fullReportLink})\n`;
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
@@ -343,9 +346,7 @@ test.describe("JSON generation", () => {
   test.beforeEach(() => {
     writeFileSyncStub = sinon.stub(fs, 'writeFileSync');
     writeFileSyncStub.returns(undefined);
-    reporter = new XFeatureReporter({
-      outputType: 'json'
-    } as XOptions);
+    reporter = new XFeatureReporter(new JsonAdapter());
   });
   test.afterEach(() => {
     sinon.restore(); 

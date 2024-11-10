@@ -1,5 +1,3 @@
-import fs from 'fs';
-import JsonAdapter from './adapters/json';
 import MarkdownAdapter from './adapters/markdown';
 
 export type TestSuite = {
@@ -19,10 +17,6 @@ export type XFeatureReporterOptions = {
   fullReportLink?: string;
 };
 
-export type XOptions = {
-  outputType: 'markdown' | 'json' | undefined;
-};
-
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 
 export interface XAdapter {
@@ -31,13 +25,14 @@ export interface XAdapter {
 
 
 export class XFeatureReporter {
-  constructor(options: XOptions | undefined) {
-    this.options = options || {
-      outputType: 'markdown'
-    };
+  constructor(outputAdapter?: XAdapter | null, adapterOptions?: any | null) {
+    this.outputAdapter = outputAdapter || new MarkdownAdapter();
+    this.adapterOptions = adapterOptions;
   }
   
-  private options: XOptions;
+  private outputAdapter: XAdapter;
+  private adapterOptions?: any;
+
   _mergeSuites(suite: TestSuite, suiteStructure: Record<string, TestSuite>) {
     if (suiteStructure[suite.title]) {
       suiteStructure[suite.title].tests.push(...suite.tests);
@@ -53,12 +48,8 @@ export class XFeatureReporter {
     return suite;
   }
 
-  generateReport(outputFile: string, results: TestSuite, options?: XFeatureReporterOptions) {
+  generateReport(outputFile: string, results: TestSuite) {
     const mergedSuite = this._mergeSuites(results, {});
-    if (this.options.outputType === 'markdown') {
-      new MarkdownAdapter().generateReport(outputFile, mergedSuite, options);
-    } else {
-      new JsonAdapter().generateReport(outputFile, mergedSuite);
-    }
+    this.outputAdapter.generateReport(outputFile, mergedSuite, this.adapterOptions);
   }
 }
