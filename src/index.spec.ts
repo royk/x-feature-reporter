@@ -12,7 +12,6 @@ const featureTitle = 'Feature title';
 const subfeatureTitle = 'Subfeature title';
 const caseTitle = 'case title';
 const caseTitle2 = 'case title 2';
-const outputFile = 'output.md';
 
 let reporter: XFeatureReporter;
 
@@ -20,7 +19,7 @@ test.describe("Markdown generation", () => {
   test.beforeEach(() => {
     writeFileSyncStub = sinon.stub(fs, 'writeFileSync');
     writeFileSyncStub.returns(undefined);
-    reporter = new XFeatureReporter(undefined, {outputFile});
+    reporter = new XFeatureReporter();
   });
   test.afterEach(() => {
     sinon.restore(); 
@@ -292,8 +291,7 @@ test.describe("Markdown generation", () => {
       const customEmbeddingPlaceholder = 'custom-feature-reporter';
       const embeddingPlaceholder = `<!-- ${customEmbeddingPlaceholder}--start -->`;
       const embeddingPlaceholderEnd = `<!-- ${customEmbeddingPlaceholder}--end -->`;
-      const options = {embeddingPlaceholder: customEmbeddingPlaceholder} as MarkdownAdapterOptions;
-      reporter = new XFeatureReporter(undefined, options);
+      reporter = new XFeatureReporter(new MarkdownAdapter({embeddingPlaceholder:customEmbeddingPlaceholder}));
 
       const initialContent = "This is static content";
       const oldContent = "this is old generated content";
@@ -318,8 +316,7 @@ test.describe("Markdown generation", () => {
     });
     test("A link to a full test report will be included when the 'fullReportLink' option is provided", () => {
       const fullReportLink = 'full-report.html';
-      const options = {fullReportLink: fullReportLink} as MarkdownAdapterOptions;
-      reporter = new XFeatureReporter(undefined, options);
+      reporter = new XFeatureReporter(new MarkdownAdapter({fullReportLink}));
       const testSuite: TestSuite = {
         title: featureTitle,
         suites: [],
@@ -346,7 +343,7 @@ test.describe("JSON generation", () => {
   test.beforeEach(() => {
     writeFileSyncStub = sinon.stub(fs, 'writeFileSync');
     writeFileSyncStub.returns(undefined);
-    reporter = new XFeatureReporter(new JsonAdapter(), {outputFile});
+    reporter = new XFeatureReporter(new JsonAdapter());
   });
   test.afterEach(() => {
     sinon.restore(); 

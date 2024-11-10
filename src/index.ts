@@ -18,8 +18,8 @@ export interface XAdapter {
   generateReport(results: TestSuite): void;
 }
 export class XFeatureReporter {
-  constructor(outputAdapter?: XAdapter, adapterOptions?: any) {
-    this.outputAdapter = outputAdapter || new MarkdownAdapter(adapterOptions);
+  constructor(outputAdapter?: XAdapter) {
+    this.outputAdapter = outputAdapter || new MarkdownAdapter({outputFile: 'report.md'});
   }
   
   private outputAdapter: XAdapter;
