@@ -32,7 +32,7 @@ You can supply your own adapter by implementing the `XAdapter` interface.
 In your own reporter, you can use `x-feature-reporter` as follows:
 
 ```typescript
-const xsuite = {/* your test results */} as TestSuite;
+const xsuite = {/* your test results */} as XTestSuite;
 const reporter = new XFeatureReporter(new MyCustomAdapter({
       ...myCustomAdapterOptions
 }));
