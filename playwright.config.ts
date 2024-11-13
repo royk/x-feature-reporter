@@ -1,7 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const isWatch = process.env.PWTEST_WATCH === '1';
-const localReporter = isWatch ? 'list' : [['list'],['html'],['playwright-feature-reporter', { outputFile: './README.md', fullReportLink: 'playwright-report/index.html' }]];
 export default defineConfig({
   testDir: './src',
   fullyParallel: true,
@@ -12,7 +11,7 @@ export default defineConfig({
   reporter: process.env.CI ? [['github'],
                               ['html'],
                               ['playwright-feature-reporter', { outputFile: './README.md', fullReportLink: 'https://raw.githack.com/royk/x-feature-reporter/refs/heads/main/playwright-report/index.html' }]] 
-                              : localReporter,
+                              : 'list',
   use: {
     trace: 'on-first-retry',
   },

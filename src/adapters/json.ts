@@ -1,4 +1,4 @@
-import { TestSuite } from "..";
+import { XTestSuite } from "..";
 import fs from 'fs';
 import { XAdapter } from '..';
 
@@ -10,7 +10,7 @@ export class JsonAdapter implements XAdapter {
         this.adapterOptions = adapterOptions || {outputFile: 'report.json'};
     }
     private adapterOptions: JsonAdapterOptions;
-    generateReport(results: TestSuite) {
+    generateReport(results: XTestSuite) {
         fs.writeFileSync(this.adapterOptions.outputFile, JSON.stringify(results));
     }
 }   

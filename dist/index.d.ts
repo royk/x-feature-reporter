@@ -1,21 +1,21 @@
-export type TestSuite = {
+export type XTestSuite = {
     title: string;
-    suites: TestSuite[];
-    tests: TestResult[];
+    suites: XTestSuite[];
+    tests: XTestResult[];
     transparent?: boolean;
 };
-export type TestResult = {
+export type XTestResult = {
     title: string;
     status: "passed" | "failed" | "skipped";
     testType?: string;
 };
 export declare const TEST_TYPE_BEHAVIOR = "behavior";
 export interface XAdapter {
-    generateReport(results: TestSuite): void;
+    generateReport(results: XTestSuite): void;
 }
 export declare class XFeatureReporter {
     constructor(outputAdapter?: XAdapter);
     private outputAdapter;
-    _mergeSuites(suite: TestSuite, suiteStructure: Record<string, TestSuite>): TestSuite;
-    generateReport(results: TestSuite): void;
+    _mergeSuites(suite: XTestSuite, suiteStructure: Record<string, XTestSuite>): XTestSuite;
+    generateReport(results: XTestSuite): void;
 }

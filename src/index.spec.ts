@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import sinon from 'sinon';
 import fs from 'fs';
-import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR } from './index';
+import {XFeatureReporter, XTestSuite, XTestResult, TEST_TYPE_BEHAVIOR } from './index';
 import { MarkdownAdapter, TEST_PREFIX_FAILED, TEST_PREFIX_PASSED, TEST_PREFIX_SKIPPED } from './adapters/markdown';
 import { JsonAdapter } from './adapters/json';
 
@@ -29,28 +29,28 @@ test.describe("Markdown generation", () => {
       {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
       const suite = {"title":"","transparent":true,"suites":[{"title":"Mobile Chrome","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Welcome screen","transparent":false,"suites":[],"tests":[{"title":"Has a button that directs the user to the signup page","status":"passed"}]}],"tests":[]},{"title":"register-screen.spec.ts","transparent":true,"suites":[{"title":"Signup screen","transparent":false,"suites":[],"tests":[{"title":"When the user fills in the form and clicks the signup button, they are taken to the profile creation page","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]};
       // an exception would be thrown if this is not handled correctly (nestedLevel goes below 0)
-      reporter.generateReport(suite as TestSuite);
+      reporter.generateReport(suite as XTestSuite);
     });
     test("tests nest correctly", 
       {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
       const json = {"title":"","transparent":true,"suites":[{"title":"no-browser","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":[],"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]}],"tests":[]};
       const mdAdapter = new MarkdownAdapter();
-      mdAdapter._printSuite(json as TestSuite);
+      mdAdapter._printSuite(json as XTestSuite);
       expect(mdAdapter._getStringBuilder()).toBe(`## Features\n  ### Suite A\n  - ${TEST_PREFIX_PASSED} Test A\n  ### Suite B\n  - ${TEST_PREFIX_PASSED} Test B\n`);
     });
     test("Suites appear as headings. Nested Suites are nested headings", () => {
-      const testSuite: TestSuite = {
+      const testSuite: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
-      const testSuite2: TestSuite = {
+      const testSuite2: XTestSuite = {
         title: subfeatureTitle,
         suites: [],
         tests: []
       };
       testSuite.suites.push(testSuite2);
-      const testCase: TestResult = {
+      const testCase: XTestResult = {
         title: caseTitle,
         status: 'passed',
         testType: TEST_TYPE_BEHAVIOR
@@ -64,20 +64,20 @@ test.describe("Markdown generation", () => {
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
     test("Suites can be marked as transparent: They will not be printed but their children will be printed", () => {
-      const rootSuite: TestSuite = {
+      const rootSuite: XTestSuite = {
         title: 'dont print',
         transparent: true,
         suites: [],
         tests: []
       };
   
-      const testSuite: TestSuite = {
+      const testSuite: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
       rootSuite.suites.push(testSuite);
-      const testCase: TestResult = {
+      const testCase: XTestResult = {
         title: caseTitle,
         status: 'passed',
         testType: TEST_TYPE_BEHAVIOR
@@ -91,32 +91,32 @@ test.describe("Markdown generation", () => {
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
     test("Suites with the same name have their results merged, and the heading is shown only once", () => {
-      const rootSuite: TestSuite = {
+      const rootSuite: XTestSuite = {
         title: 'dont print',
         transparent: true,
         suites: [],
         tests: []
       };
   
-      const testSuite1: TestSuite = {
+      const testSuite1: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
-      const testSuite2: TestSuite = {
+      const testSuite2: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
       rootSuite.suites.push(testSuite1);
       rootSuite.suites.push(testSuite2);
-      const testCase1: TestResult = {
+      const testCase1: XTestResult = {
         title: caseTitle,
         status: 'passed',
         testType: TEST_TYPE_BEHAVIOR
       };
       testSuite1.tests.push(testCase1);
-      const testCase2: TestResult = {
+      const testCase2: XTestResult = {
         title: caseTitle2,
         status: 'passed',
         testType: TEST_TYPE_BEHAVIOR
@@ -129,12 +129,12 @@ test.describe("Markdown generation", () => {
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
     test("Suites containing only non-behavioral tests are not shown in the report", () => {
-      const testSuite1: TestSuite = {
+      const testSuite1: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
-      const testCase1: TestResult = {
+      const testCase1: XTestResult = {
         title: caseTitle,
         status: 'passed',
         testType: 'edge-case'
@@ -148,16 +148,16 @@ test.describe("Markdown generation", () => {
   });
   test.describe("TestResults (features)", () => {
     test(`TestResults appear as list items representing features. Each feature is visually marked as Passing ${TEST_PREFIX_PASSED}, Failing ${TEST_PREFIX_FAILED} or Skipped ${TEST_PREFIX_SKIPPED}`, () => {
-      const testSuite: TestSuite = {
+      const testSuite: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
-      const failedCase: TestResult = {
+      const failedCase: XTestResult = {
         title: caseTitle,
         status: 'failed',
       };
-      const skippedCase: TestResult = {
+      const skippedCase: XTestResult = {
         title: caseTitle2,
         status: 'skipped',
       };
@@ -168,18 +168,18 @@ test.describe("Markdown generation", () => {
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
-    test("Only TestResults with testType 'behavior' appear as features. If testType is note specified, it's assumed to be 'behavior'", () => {
-      const testSuite: TestSuite = {
+    test("Only XTestResults with testType 'behavior' appear as features. If testType is note specified, it's assumed to be 'behavior'", () => {
+      const testSuite: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
-      const testCase1: TestResult = {
+      const testCase1: XTestResult = {
         title: caseTitle,
         status: 'passed',
         testType: 'edge-case'
       };
-      const testCase2: TestResult = {
+      const testCase2: XTestResult = {
         title: caseTitle2,
         status: 'passed'
       };
@@ -191,17 +191,17 @@ test.describe("Markdown generation", () => {
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
     test("Features can nest under other features using a '-' prefix", () => {
-      const testSuite: TestSuite = {
+      const testSuite: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
 
-      const testCase1: TestResult = {
+      const testCase1: XTestResult = {
         title: caseTitle,
         status: 'passed',
       };
-      const testCase2: TestResult = {
+      const testCase2: XTestResult = {
         title: `- ${caseTitle2}`,
         status: 'passed',
       };
@@ -213,17 +213,17 @@ test.describe("Markdown generation", () => {
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
     test("- Features can nest multiple levels deep using multiple '-' prefixes", () => {
-      const testSuite: TestSuite = {
+      const testSuite: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
 
-      const testCase1: TestResult = {
+      const testCase1: XTestResult = {
         title: caseTitle,
         status: 'passed',
       };
-      const testCase2: TestResult = {
+      const testCase2: XTestResult = {
         title: `-- ${caseTitle2}`,
         status: 'passed',
       };
@@ -242,12 +242,12 @@ test.describe("Markdown generation", () => {
       const initialContent = "This is static content in the header";
       const additionalContent = "this is additional content in the footer";
       const oldContent = "this is old generated content";
-      const testSuite: TestSuite = {
+      const testSuite: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
-      const testCase1: TestResult = {
+      const testCase1: XTestResult = {
         title: caseTitle,
         status: 'passed',
       };
@@ -264,12 +264,12 @@ test.describe("Markdown generation", () => {
     test("The closing placeholder can be ommitted if the feature list is intended as the last content in the file", () => {
       const initialContent = "This is static content";
       const oldContent = "this is old generated content";
-      const testSuite: TestSuite = {
+      const testSuite: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
-      const testCase1: TestResult = {
+      const testCase1: XTestResult = {
         title: caseTitle,
         status: 'passed',
       };
@@ -295,12 +295,12 @@ test.describe("Markdown generation", () => {
 
       const initialContent = "This is static content";
       const oldContent = "this is old generated content";
-      const testSuite: TestSuite = {
+      const testSuite: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
-      const testCase1: TestResult = {
+      const testCase1: XTestResult = {
         title: caseTitle,
         status: 'passed',
       };
@@ -317,12 +317,12 @@ test.describe("Markdown generation", () => {
     test("A link to a full test report will be included when the 'fullReportLink' option is provided", () => {
       const fullReportLink = 'full-report.html';
       reporter = new XFeatureReporter(new MarkdownAdapter({outputFile: 'report.md', fullReportLink}));
-      const testSuite: TestSuite = {
+      const testSuite: XTestSuite = {
         title: featureTitle,
         suites: [],
         tests: []
       };
-      const testCase: TestResult = {
+      const testCase: XTestResult = {
         title: caseTitle,
         status: 'passed',
         testType: TEST_TYPE_BEHAVIOR
@@ -350,8 +350,8 @@ test.describe("JSON generation", () => {
   });
   test("Generates a JSON file", () => {
     const json = {"title":"","transparent":true,"suites":[{"title":"no-browser","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":[],"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]}],"tests":[]};
-    const suite = json as TestSuite;
-    reporter.generateReport(suite as TestSuite);
+    const suite = json as XTestSuite;
+    reporter.generateReport(suite as XTestSuite);
     const fileContent = writeFileSyncStub.getCall(0)?.args[1];
     expect(fileContent).toBe(JSON.stringify(json));
   });

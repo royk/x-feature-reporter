@@ -1,4 +1,4 @@
-import { TestResult, TestSuite, XAdapter } from "..";
+import { XTestResult, XTestSuite, XAdapter } from "..";
 export declare const TEST_PREFIX_SKIPPED = "\uD83D\uDEA7";
 export declare const TEST_PREFIX_PASSED = "\u2705";
 export declare const TEST_PREFIX_FAILED = "\u274C";
@@ -14,9 +14,9 @@ export declare class MarkdownAdapter implements XAdapter {
     private nestedLevel;
     private stringBuilder;
     _getStringBuilder(): string;
-    _willPrintTest(test: TestResult): boolean;
-    _getOutcomeIcon(testCase: TestResult): "🚧" | "✅" | "❌";
-    _printSuite(s: TestSuite): void;
+    _willPrintTest(test: XTestResult): boolean;
+    _getOutcomeIcon(testCase: XTestResult): "🚧" | "✅" | "❌";
+    _printSuite(s: XTestSuite): void;
     _generateMarkdown(outputFile: string, options: MarkdownAdapterOptions): void;
-    generateReport(results: TestSuite): void;
+    generateReport(results: XTestSuite): void;
 }

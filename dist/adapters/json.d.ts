@@ -1,4 +1,4 @@
-import { TestSuite } from "..";
+import { XTestSuite } from "..";
 import { XAdapter } from '..';
 export type JsonAdapterOptions = {
     outputFile: string;
@@ -6,5 +6,5 @@ export type JsonAdapterOptions = {
 export declare class JsonAdapter implements XAdapter {
     constructor(adapterOptions?: JsonAdapterOptions);
     private adapterOptions;
-    generateReport(results: TestSuite): void;
+    generateReport(results: XTestSuite): void;
 }

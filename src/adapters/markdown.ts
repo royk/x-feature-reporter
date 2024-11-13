@@ -1,4 +1,4 @@
-import { TEST_TYPE_BEHAVIOR, TestResult, TestSuite, XAdapter } from "..";
+import { TEST_TYPE_BEHAVIOR, XTestResult, XTestSuite, XAdapter } from "..";
 import fs from 'fs';
 
 export const TEST_PREFIX_SKIPPED = '🚧';
@@ -25,14 +25,14 @@ export class MarkdownAdapter implements XAdapter {
         return this.stringBuilder;
       }
     
-      _willPrintTest(test: TestResult) {
+      _willPrintTest(test: XTestResult) {
         if (test.testType && test.testType !== TEST_TYPE_BEHAVIOR) {
           return;
         }
         return true;
       }
     
-      _getOutcomeIcon(testCase: TestResult) {
+      _getOutcomeIcon(testCase: XTestResult) {
         switch (testCase.status) {
           case 'skipped':
             return TEST_PREFIX_SKIPPED;
@@ -44,7 +44,7 @@ export class MarkdownAdapter implements XAdapter {
         return testCase.status;
       }
     
-      _printSuite(s: TestSuite) {
+      _printSuite(s: XTestSuite) {
         const myNestedLevel = this.nestedLevel;
         const headerPrefix = '  '.repeat(myNestedLevel) + '#'.repeat(myNestedLevel+2);
         if (s.tests.length === 0 && s.suites.length === 0) {
@@ -104,7 +104,7 @@ export class MarkdownAdapter implements XAdapter {
           fs.writeFileSync(outputFile, this.stringBuilder);
         }
       }
-    generateReport(results: TestSuite) {
+    generateReport(results: XTestSuite) {
         this.stringBuilder = '\n';
         this.nestedLevel = 0;
         this._printSuite(results);

@@ -1,12 +1,12 @@
 import { MarkdownAdapter } from './adapters/markdown';
 
-export type TestSuite = {
+export type XTestSuite = {
   title: string;
-  suites: TestSuite[];
-  tests: TestResult[];
+  suites: XTestSuite[];
+  tests: XTestResult[];
   transparent?: boolean;
 };
-export type TestResult = {
+export type XTestResult = {
   title: string;
   status: "passed" | "failed" | "skipped";
   testType?: string;
@@ -15,7 +15,7 @@ export type TestResult = {
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 
 export interface XAdapter {
-  generateReport(results: TestSuite): void;
+  generateReport(results: XTestSuite): void;
 }
 export class XFeatureReporter {
   constructor(outputAdapter?: XAdapter) {
@@ -24,7 +24,7 @@ export class XFeatureReporter {
   
   private outputAdapter: XAdapter;
 
-  _mergeSuites(suite: TestSuite, suiteStructure: Record<string, TestSuite>) {
+  _mergeSuites(suite: XTestSuite, suiteStructure: Record<string, XTestSuite>) {
     if (suiteStructure[suite.title]) {
       suiteStructure[suite.title].tests.push(...suite.tests);
       suiteStructure[suite.title].suites.push(...suite.suites);
@@ -39,7 +39,7 @@ export class XFeatureReporter {
     return suite;
   }
 
-  generateReport(results: TestSuite) {
+  generateReport(results: XTestSuite) {
     const mergedSuite = this._mergeSuites(results, {});
     this.outputAdapter.generateReport(mergedSuite);
   }
