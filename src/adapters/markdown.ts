@@ -55,7 +55,8 @@ export class MarkdownAdapter implements XAdapter {
           const printableTests = s.tests.filter((test) => this._willPrintTest(test));
           // if there are no tests and no nested suites, don't print the suite
           // TODO: Consider differentiating between no tests and no printable tests
-          if (s.suites.length === 0 && printableTests.length === 0) {
+          const hasNestedSuites = s.suites && s.suites.length > 0;
+          if (!hasNestedSuites && printableTests.length === 0) {
             return;
           }
           this.stringBuilder += `${headerPrefix} ${s.title}\n`;
@@ -80,7 +81,7 @@ export class MarkdownAdapter implements XAdapter {
           });
           
         } 
-        s.suites.forEach((ss) => {
+        s.suites && s.suites.forEach((ss) => {
           this._printSuite(ss);
         });
         if (isNotTransparent) {

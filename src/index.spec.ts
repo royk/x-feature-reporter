@@ -38,6 +38,13 @@ test.describe("Markdown generation", () => {
       mdAdapter._printSuite(json as XTestSuite);
       expect(mdAdapter._getStringBuilder()).toBe(`## Features\n  ### Suite A\n  - ${TEST_PREFIX_PASSED} Test A\n  ### Suite B\n  - ${TEST_PREFIX_PASSED} Test B\n`);
     });
+    test("handles null suites", 
+      {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
+      const json = {"title":"","transparent":true,"suites":[{"title":"no-browser","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":null,"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]}],"tests":[]};
+      const mdAdapter = new MarkdownAdapter();
+      mdAdapter._printSuite(json as XTestSuite);
+      expect(mdAdapter._getStringBuilder()).toBe(`## Features\n  ### Suite A\n  - ${TEST_PREFIX_PASSED} Test A\n  ### Suite B\n  - ${TEST_PREFIX_PASSED} Test B\n`);
+    });
     test("Suites appear as headings. Nested Suites are nested headings", () => {
       const testSuite: XTestSuite = {
         title: featureTitle,

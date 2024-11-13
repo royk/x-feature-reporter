@@ -17,7 +17,7 @@ class XFeatureReporter {
         else {
             suiteStructure[suite.title] = suite;
         }
-        suite.suites.forEach((ss) => {
+        suite.suites && suite.suites.forEach((ss) => {
             this._mergeSuites(ss, suiteStructure);
         });
         return suite;
