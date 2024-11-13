@@ -3,24 +3,24 @@ Generates or updates documentation with the results of a test run.
 Not intended to be used directly. Rather, use it as a base for your custom reporter.
 
 ## Reporters
-'x-feature-reporter' accepts a standardized javascript object that represents a test run with results.
+`x-feature-reporter` accepts a standardized javascript object that represents a test run with results.
 It then performs some transformations and hands off the data to an adapter for output.
 
-Usually, a reporter will be a wrapper around 'x-feature-reporter' that converts a test framework's native output format into the standardized format.
+Usually, a reporter will be a wrapper around `x-feature-reporter` that converts a test framework's native output format into the standardized format.
 
-For example, if you're using Playwright and want to publish your test results to a markdown file (which is what this project is doing), you can use the [playwright-feature-reporter](https://github.com/royk/playwright-feature-reporter) project, which uses 'x-feature-reporter' as a base.
+For example, if you're using Playwright and want to publish your test results to a markdown file (which is what this project is doing), you can use the [playwright-feature-reporter](https://github.com/royk/playwright-feature-reporter) project, which uses `x-feature-reporter` as a base.
 
 An additional example is [jest-feature-reporter](https://github.com/royk/jest-feature-reporter), which publishes Jest test results to markdown.
 
 ## Adapters
 
-'x-feature-reporter' uses adapters to support different output formats.
-The default adapter is 'Markdown', but you can easily implement your own adapter.
+`x-feature-reporter` uses adapters to support different output formats.
+The default adapter is `Markdown`, but you can easily implement your own adapter.
 For example, you could implement an adapter for outputting to Word, PDF, or even publishing via an API to slack or notion.
 
-'x-feature-reporter' is additionally bundled with a 'JSON' adapter, which outputs the standardized, transformed data as a JSON file. This can be useful if you want to further process the data (for example, combine it with the results of other test runs).
+`x-feature-reporter` is additionally bundled with a `JSON` adapter, which outputs the standardized, transformed data as a JSON file. This can be useful if you want to further process the data (for example, combine it with the results of other test runs).
 
-You can supply your own adapter by implementing the 'XAdapter' interface.
+You can supply your own adapter by implementing the `XAdapter` interface.
 
 ## Features
 
