@@ -22,6 +22,17 @@ For example, you could implement an adapter for outputting to Word, PDF, or even
 
 You can supply your own adapter by implementing the `XAdapter` interface.
 
+## Usage example
+In your own reporter, you can use `x-feature-reporter` as follows:
+
+```typescript
+const xsuite = {/* your test results */} as TestSuite;
+const reporter = new XFeatureReporter(new MyCustomAdapter({
+      ...myCustomAdapterOptions
+}));
+reporter.generateReport(xsuite);
+```
+
 ## Features
 
 The below section was generated using [Playwright-feature-reporter](https://github.com/royk/playwright-feature-reporter), which is based on this library.
