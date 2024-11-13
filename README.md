@@ -52,7 +52,7 @@ The below section was generated using [Playwright-feature-reporter](https://gith
   - ✅ Suites containing only non-behavioral tests are not shown in the report
   ### TestResults (features)
   - ✅ TestResults appear as list items representing features. Each feature is visually marked as Passing ✅, Failing ❌ or Skipped 🚧
-  - ✅ Only TestResults with testType 'behavior' appear as features. If testType is note specified, it's assumed to be 'behavior'
+  - ✅ Only XTestResults with testType 'behavior' appear as features. If testType is note specified, it's assumed to be 'behavior'
   - ✅ Features can nest under other features using a '-' prefix
     - ✅ Features can nest multiple levels deep using multiple '-' prefixes
   ### Embedding
