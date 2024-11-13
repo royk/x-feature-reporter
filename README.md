@@ -26,4 +26,4 @@ The below features section was generated using [Playwright-feature-reporter](htt
 - ✅ Generates a JSON file
 - 🚧 Suites can be marked as transparent: They will not be printed but their children will be printed
 
-[Test report](playwright-report/index.html)
+[Test report](https://raw.githack.com/royk/x-feature-reporter/refs/heads/main/playwright-report/index.html)
