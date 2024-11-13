@@ -4,6 +4,23 @@
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./adapters/markdown": {
+      "import": "./dist/adapters/markdown.js",
+      "require": "./dist/adapters/markdown.js",
+      "types": "./dist/adapters/markdown.d.ts"
+    },
+    "./adapters/json": {
+      "import": "./dist/adapters/json.js",
+      "require": "./dist/adapters/json.js",
+      "types": "./dist/adapters/json.d.ts"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "test": "npx playwright test",
