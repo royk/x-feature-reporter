@@ -47,7 +47,9 @@ export class MarkdownAdapter implements XAdapter {
       _printSuite(s: XTestSuite) {
         const myNestedLevel = this.nestedLevel;
         const headerPrefix = '  '.repeat(myNestedLevel) + '#'.repeat(myNestedLevel+2);
-        if (s.tests.length === 0 && s.suites.length === 0) {
+        const hasNestedSuites = s.suites && s.suites.length > 0;
+        const hasTests = s.tests && s.tests.length > 0;
+        if (!hasTests && !hasNestedSuites) {
           return;
         }
         const isNotTransparent = s.transparent===null || !s.transparent;
@@ -55,7 +57,6 @@ export class MarkdownAdapter implements XAdapter {
           const printableTests = s.tests.filter((test) => this._willPrintTest(test));
           // if there are no tests and no nested suites, don't print the suite
           // TODO: Consider differentiating between no tests and no printable tests
-          const hasNestedSuites = s.suites && s.suites.length > 0;
           if (!hasNestedSuites && printableTests.length === 0) {
             return;
           }
