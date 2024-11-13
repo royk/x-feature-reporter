@@ -12,7 +12,7 @@ Existing reporters:
 `x-feature-reporter` accepts a standardized javascript object that represents a test run with results.
 It then performs some transformations and hands off the data to an adapter for output.
 
-Usually, a reporter will be a wrapper around `x-feature-reporter` that converts a test framework's native output format into the standardized format.
+Usually, a reporter will be created to convert a test framework's native output format into the standardized format. The reporter will instantiate `XFeatureReporter` with an adapter, and then call `generateReport` with the test results.
 
 For example, if you're using Playwright and want to publish your test results to a markdown file (which is what this project is doing), you can use the [playwright-feature-reporter](https://github.com/royk/playwright-feature-reporter) project, which uses `x-feature-reporter` as a base.
 
