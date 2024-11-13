@@ -1,6 +1,6 @@
 {
   "name": "x-feature-reporter",
-  "version": "3.0.0-5",
+  "version": "3.0.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
