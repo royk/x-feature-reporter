@@ -6,6 +6,8 @@ Existing reporters:
 - [playwright-feature-reporter](https://github.com/royk/playwright-feature-reporter)
 - [jest-feature-reporter](https://github.com/royk/jest-feature-reporter)
 
+(want to add your own? open a PR!)
+
 ## Reporters
 `x-feature-reporter` accepts a standardized javascript object that represents a test run with results.
 It then performs some transformations and hands off the data to an adapter for output.
