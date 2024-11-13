@@ -14,7 +14,7 @@ export type MarkdownAdapterOptions = {
     outputFile: string;
 };
 
-export default class MarkdownAdapter implements XAdapter {
+export class MarkdownAdapter implements XAdapter {
     constructor(adapterOptions?: MarkdownAdapterOptions) {
         this.adapterOptions = adapterOptions || {outputFile: 'report.md'};
     }

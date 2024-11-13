@@ -1,4 +1,4 @@
-import MarkdownAdapter from './adapters/markdown';
+import { MarkdownAdapter } from './adapters/markdown';
 
 export type TestSuite = {
   title: string;

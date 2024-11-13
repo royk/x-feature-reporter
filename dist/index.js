@@ -1,14 +1,11 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.XFeatureReporter = exports.TEST_TYPE_BEHAVIOR = void 0;
-const markdown_1 = __importDefault(require("./adapters/markdown"));
+const markdown_1 = require("./adapters/markdown");
 exports.TEST_TYPE_BEHAVIOR = 'behavior';
 class XFeatureReporter {
     constructor(outputAdapter) {
-        this.outputAdapter = outputAdapter || new markdown_1.default();
+        this.outputAdapter = outputAdapter || new markdown_1.MarkdownAdapter();
     }
     _mergeSuites(suite, suiteStructure) {
         if (suiteStructure[suite.title]) {

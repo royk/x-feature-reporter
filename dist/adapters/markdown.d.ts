@@ -8,7 +8,7 @@ export type MarkdownAdapterOptions = {
     fullReportLink?: string;
     outputFile: string;
 };
-export default class MarkdownAdapter implements XAdapter {
+export declare class MarkdownAdapter implements XAdapter {
     constructor(adapterOptions?: MarkdownAdapterOptions);
     private adapterOptions;
     private nestedLevel;

@@ -5,7 +5,7 @@ import { XAdapter } from '..';
 export type JsonAdapterOptions = {
     outputFile: string;
 };
-export default class JsonAdapter implements XAdapter {
+export class JsonAdapter implements XAdapter {
     constructor(adapterOptions?: JsonAdapterOptions) {
         this.adapterOptions = adapterOptions || {outputFile: 'report.json'};
     }

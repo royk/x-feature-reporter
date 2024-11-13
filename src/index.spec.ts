@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 import sinon from 'sinon';
 import fs from 'fs';
 import {XFeatureReporter, TestSuite, TestResult, TEST_TYPE_BEHAVIOR } from './index';
-import MarkdownAdapter, { TEST_PREFIX_FAILED, TEST_PREFIX_PASSED, TEST_PREFIX_SKIPPED, MarkdownAdapterOptions } from './adapters/markdown';
-import JsonAdapter from './adapters/json';
+import { MarkdownAdapter, TEST_PREFIX_FAILED, TEST_PREFIX_PASSED, TEST_PREFIX_SKIPPED } from './adapters/markdown';
+import { JsonAdapter } from './adapters/json';
 
 
 let writeFileSyncStub: sinon.SinonStub;
