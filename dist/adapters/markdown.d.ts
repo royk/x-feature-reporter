@@ -14,7 +14,6 @@ export declare class MarkdownAdapter implements XAdapter {
     private nestedLevel;
     private stringBuilder;
     _getStringBuilder(): string;
-    _willPrintTest(test: XTestResult): boolean;
     _getOutcomeIcon(testCase: XTestResult): "🚧" | "✅" | "❌";
     _printSuite(s: XTestSuite): void;
     _generateMarkdown(outputFile: string, options: MarkdownAdapterOptions): void;

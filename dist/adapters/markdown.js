@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MarkdownAdapter = exports.defaultEmbeddingPlaceholder = exports.TEST_PREFIX_FAILED = exports.TEST_PREFIX_PASSED = exports.TEST_PREFIX_SKIPPED = void 0;
-const __1 = require("..");
 const fs_1 = __importDefault(require("fs"));
 exports.TEST_PREFIX_SKIPPED = '🚧';
 exports.TEST_PREFIX_PASSED = '✅';
@@ -19,12 +18,6 @@ class MarkdownAdapter {
     _getStringBuilder() {
         return this.stringBuilder;
     }
-    _willPrintTest(test) {
-        if (test.testType && test.testType !== __1.TEST_TYPE_BEHAVIOR) {
-            return;
-        }
-        return true;
-    }
     _getOutcomeIcon(testCase) {
         switch (testCase.status) {
             case 'skipped':
@@ -38,24 +31,21 @@ class MarkdownAdapter {
     }
     _printSuite(s) {
         const myNestedLevel = this.nestedLevel;
-        const headerPrefix = '  '.repeat(myNestedLevel) + '#'.repeat(myNestedLevel + 2);
+        const headerPrefix = '#'.repeat(myNestedLevel + 2);
         const hasNestedSuites = s.suites && s.suites.length > 0;
         const hasTests = s.tests && s.tests.length > 0;
         if (!hasTests && !hasNestedSuites) {
             return;
         }
-        const printableTests = s.tests.filter((test) => this._willPrintTest(test));
         // if there are no tests and no nested suites, don't print the suite
         // TODO: Consider differentiating between no tests and no printable tests
-        if (!hasNestedSuites && printableTests.length === 0) {
+        if (!hasNestedSuites && s.tests.length === 0) {
             return;
         }
         this.stringBuilder += `${headerPrefix} ${s.title}\n`;
         this.nestedLevel++;
         const testNames = [];
-        s.tests
-            .filter((test) => this._willPrintTest(test))
-            .forEach((test) => {
+        s.tests.forEach((test) => {
             if (testNames.includes(test.title)) {
                 return;
             }
@@ -66,7 +56,7 @@ class MarkdownAdapter {
                 additionalNesting = testTitle.indexOf(' ');
                 testTitle = testTitle.slice(additionalNesting + 1);
             }
-            const listPrefix = '  '.repeat(myNestedLevel + additionalNesting) + '-';
+            const listPrefix = ' -';
             this.stringBuilder += `${listPrefix} ${this._getOutcomeIcon(test)} ${testTitle}\n`;
         });
         s.suites && s.suites.forEach((ss) => {
