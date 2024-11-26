@@ -1,4 +1,4 @@
-import { TEST_TYPE_BEHAVIOR, XTestResult, XTestSuite, XAdapter } from "..";
+import { XTestResult, XTestSuite, XAdapter } from "..";
 import fs from 'fs';
 
 export const TEST_PREFIX_SKIPPED = '🚧';
@@ -25,13 +25,6 @@ export class MarkdownAdapter implements XAdapter {
         return this.stringBuilder;
       }
     
-      _willPrintTest(test: XTestResult) {
-        if (test.testType && test.testType !== TEST_TYPE_BEHAVIOR) {
-          return;
-        }
-        return true;
-      }
-    
       _getOutcomeIcon(testCase: XTestResult) {
         switch (testCase.status) {
           case 'skipped':
@@ -52,18 +45,15 @@ export class MarkdownAdapter implements XAdapter {
         if (!hasTests && !hasNestedSuites) {
           return;
         }
-        const printableTests = s.tests.filter((test) => this._willPrintTest(test));
         // if there are no tests and no nested suites, don't print the suite
         // TODO: Consider differentiating between no tests and no printable tests
-        if (!hasNestedSuites && printableTests.length === 0) {
+        if (!hasNestedSuites && s.tests.length === 0) {
           return;
         }
         this.stringBuilder += `${headerPrefix} ${s.title}\n`;
         this.nestedLevel++;
         const testNames = [];
-        s.tests
-        .filter((test) => this._willPrintTest(test))
-        .forEach((test) => {
+        s.tests.forEach((test) => {
           if (testNames.includes(test.title)) {
             return;
           }
