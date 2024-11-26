@@ -50,8 +50,10 @@ The below section was generated using [Playwright-feature-reporter](https://gith
     - ✅ Don't merge suites with the same name but different lineage
     #### Transparency (suites that exist only to group other suites but aren't outputted as headings)
     - ✅ Don't output suites marked as transparent. Their children will be outputted
+  ### TestResults
+    #### Test types
+    - ✅ Don't output suites containing only non-behavioral tests
 ## Markdown generation
-- ✅ Don't output suites containing only non-behavioral tests (TODO: move to core)
   ### Suites (headings)
   - ✅ Suites appear as headings. Nested Suites are nested headings
   ### TestResults (features)

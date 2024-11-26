@@ -18,5 +18,6 @@ export declare class XFeatureReporter {
     private outputAdapter;
     _mergeSuites(suite: XTestSuite, suiteStructure: Record<string, XTestSuite>, lineage: string): XTestSuite;
     _removeTransparentSuites(suite: XTestSuite): XTestSuite[];
+    _removeNonBehavioralTests(suite: XTestSuite): void;
     generateReport(results: XTestSuite): void;
 }
