@@ -205,25 +205,12 @@ test.describe("Markdown generation", () => {
     sinon.restore(); 
   });
   test.describe("Suites (headings)", () => {
-    test("Transparent suites don't affect nesting levels", 
-      {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
-      const suite = {"title":"","transparent":true,"suites":[{"title":"Mobile Chrome","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Welcome screen","transparent":false,"suites":[],"tests":[{"title":"Has a button that directs the user to the signup page","status":"passed"}]}],"tests":[]},{"title":"register-screen.spec.ts","transparent":true,"suites":[{"title":"Signup screen","transparent":false,"suites":[],"tests":[{"title":"When the user fills in the form and clicks the signup button, they are taken to the profile creation page","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]};
-      // an exception would be thrown if this is not handled correctly (nestedLevel goes below 0)
-      reporter.generateReport(suite as XTestSuite);
-    });
     test("tests nest correctly", 
       {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
-      const json = {"title":"","transparent":true,"suites":[{"title":"no-browser","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":[],"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]}],"tests":[]};
+      const json = [{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":[],"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}];
       const mdAdapter = new MarkdownAdapter();
-      mdAdapter._printSuite(json as XTestSuite);
-      expect(mdAdapter._getStringBuilder()).toBe(`## Features\n  ### Suite A\n  - ${TEST_PREFIX_PASSED} Test A\n  ### Suite B\n  - ${TEST_PREFIX_PASSED} Test B\n`);
-    });
-    test("handles null suites", 
-      {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
-      const json = {"title":"","transparent":true,"suites":[{"title":"no-browser","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":null,"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]}],"tests":[]};
-      const mdAdapter = new MarkdownAdapter();
-      mdAdapter._printSuite(json as XTestSuite);
-      expect(mdAdapter._getStringBuilder()).toBe(`## Features\n  ### Suite A\n  - ${TEST_PREFIX_PASSED} Test A\n  ### Suite B\n  - ${TEST_PREFIX_PASSED} Test B\n`);
+      mdAdapter.generateReport(json as XTestSuite[]);
+      expect(mdAdapter._getStringBuilder()).toBe(`\n## Features\n  ### Suite A\n  - ${TEST_PREFIX_PASSED} Test A\n  ### Suite B\n  - ${TEST_PREFIX_PASSED} Test B\n`);
     });
     test("Suites appear as headings. Nested Suites are nested headings", () => {
       const testSuite: XTestSuite = {

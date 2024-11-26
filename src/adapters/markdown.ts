@@ -52,42 +52,37 @@ export class MarkdownAdapter implements XAdapter {
         if (!hasTests && !hasNestedSuites) {
           return;
         }
-        const isNotTransparent = s.transparent===null || !s.transparent;
-        if (isNotTransparent) {
-          const printableTests = s.tests.filter((test) => this._willPrintTest(test));
-          // if there are no tests and no nested suites, don't print the suite
-          // TODO: Consider differentiating between no tests and no printable tests
-          if (!hasNestedSuites && printableTests.length === 0) {
+        const printableTests = s.tests.filter((test) => this._willPrintTest(test));
+        // if there are no tests and no nested suites, don't print the suite
+        // TODO: Consider differentiating between no tests and no printable tests
+        if (!hasNestedSuites && printableTests.length === 0) {
+          return;
+        }
+        this.stringBuilder += `${headerPrefix} ${s.title}\n`;
+        this.nestedLevel++;
+        const testNames = [];
+        s.tests
+        .filter((test) => this._willPrintTest(test))
+        .forEach((test) => {
+          if (testNames.includes(test.title)) {
             return;
           }
-          this.stringBuilder += `${headerPrefix} ${s.title}\n`;
-          this.nestedLevel++;
-          const testNames = [];
-          s.tests
-          .filter((test) => this._willPrintTest(test))
-          .forEach((test) => {
-            if (testNames.includes(test.title)) {
-              return;
-            }
+        
+          testNames.push(test.title);
+          let testTitle = test.title;
+          let additionalNesting = 0;
+          if (testTitle.startsWith('-')) {
+            additionalNesting = testTitle.indexOf(' ');
+            testTitle = testTitle.slice(additionalNesting+1);
+          }
+          const listPrefix = '  '.repeat(myNestedLevel + additionalNesting) + '-';
+          this.stringBuilder += `${listPrefix} ${this._getOutcomeIcon(test)} ${testTitle}\n`;
+        });
           
-            testNames.push(test.title);
-            let testTitle = test.title;
-            let additionalNesting = 0;
-            if (testTitle.startsWith('-')) {
-              additionalNesting = testTitle.indexOf(' ');
-              testTitle = testTitle.slice(additionalNesting+1);
-            }
-            const listPrefix = '  '.repeat(myNestedLevel + additionalNesting) + '-';
-            this.stringBuilder += `${listPrefix} ${this._getOutcomeIcon(test)} ${testTitle}\n`;
-          });
-          
-        } 
         s.suites && s.suites.forEach((ss) => {
           this._printSuite(ss);
         });
-        if (isNotTransparent) {
-          this.nestedLevel--;
-        }
+        this.nestedLevel--;
       }
       _generateMarkdown(outputFile: string, options: MarkdownAdapterOptions) {
         const existingContent = fs.existsSync(outputFile) ? fs.readFileSync(outputFile, 'utf8') : '';
@@ -111,6 +106,7 @@ export class MarkdownAdapter implements XAdapter {
         this.nestedLevel = 0;
         results.forEach((result) => {
           this._printSuite(result);
+          this.nestedLevel = 0;
         });
         if (this.adapterOptions.fullReportLink) {
             this.stringBuilder += `\n[Test report](${this.adapterOptions.fullReportLink})\n`;
