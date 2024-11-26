@@ -24,7 +24,6 @@ test.describe("Core features", () => {
     sinon.restore(); 
   });
   test.describe("Suites", () => {
-   
     test("Merge suites with the same lineage and name. merge their results under the same suite (lineage = parents suite names)", () => {
       const rootSuite: XTestSuite = {
         title: 'dont print',
@@ -179,7 +178,7 @@ test.describe("Markdown generation", () => {
     sinon.restore(); 
   });
   test.describe("Suites (headings)", () => {
-    test("Transparent suites don't affect nesting levels", 
+    test("Transparent suites don't affect nesting levels (TODO: move to core)", 
       {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
       const suite = {"title":"","transparent":true,"suites":[{"title":"Mobile Chrome","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Welcome screen","transparent":false,"suites":[],"tests":[{"title":"Has a button that directs the user to the signup page","status":"passed"}]}],"tests":[]},{"title":"register-screen.spec.ts","transparent":true,"suites":[{"title":"Signup screen","transparent":false,"suites":[],"tests":[{"title":"When the user fills in the form and clicks the signup button, they are taken to the profile creation page","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]};
       // an exception would be thrown if this is not handled correctly (nestedLevel goes below 0)
@@ -226,7 +225,7 @@ test.describe("Markdown generation", () => {
     });
 
   });
-  test("Don't output suites containing only non-behavioral tests", () => {
+  test("Don't output suites containing only non-behavioral tests (TODO: move to core)", () => {
     const testSuite1: XTestSuite = {
       title: featureTitle,
       suites: [],
@@ -243,7 +242,7 @@ test.describe("Markdown generation", () => {
     const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
     expect(actualMarkdown).toBe(expectedMarkdown);
   });
-  test("Don't output suites marked as transparent. Their children will be outputted", () => {
+  test("Don't output suites marked as transparent. Their children will be outputted (TODO: move to core)", () => {
     const rootSuite: XTestSuite = {
       title: 'dont print',
       transparent: true,
@@ -292,7 +291,7 @@ test.describe("Markdown generation", () => {
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
-    test("Only XTestResults with testType 'behavior' appear as features. Non-behavioral tests aren't shown in the report (if testType is not specified, it's assumed to be 'behavior')", () => {
+    test("Only XTestResults with testType 'behavior' appear as features. Non-behavioral tests aren't shown in the report (if testType is not specified, it's assumed to be 'behavior') (TODO: move to core)", () => {
       const testSuite: XTestSuite = {
         title: featureTitle,
         suites: [],
