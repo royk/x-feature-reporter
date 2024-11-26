@@ -24,7 +24,7 @@ test.describe("Core features", () => {
     sinon.restore(); 
   });
   test.describe("Suites", () => {
-    test.describe("Merging suites", () => {
+    test.describe("Merging", () => {
       test("Merge suites with the same lineage and name. merge their results under the same suite (lineage = parents suite names)", () => {
         const rootSuite: XTestSuite = {
           title: 'dont print',
@@ -166,7 +166,7 @@ test.describe("Core features", () => {
         expect(actualMarkdown).toBe(expectedMarkdown);
       });
     });
-    test.describe("Transparent suites (suites that exist only to group other suites but aren't outputted as headings)", () => {
+    test.describe("Transparency (suites that exist only to group other suites but aren't outputted as headings)", () => {
       test("Don't output suites marked as transparent. Their children will be outputted", () => {
         const rootSuite: XTestSuite = {
           title: 'dont print',
