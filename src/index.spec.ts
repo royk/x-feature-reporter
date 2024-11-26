@@ -205,7 +205,7 @@ test.describe("Markdown generation", () => {
     sinon.restore(); 
   });
   test.describe("Suites (headings)", () => {
-    test("Transparent suites don't affect nesting levels (TODO: move to core)", 
+    test("Transparent suites don't affect nesting levels", 
       {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
       const suite = {"title":"","transparent":true,"suites":[{"title":"Mobile Chrome","transparent":true,"suites":[{"title":"index.spec.ts","transparent":true,"suites":[{"title":"Welcome screen","transparent":false,"suites":[],"tests":[{"title":"Has a button that directs the user to the signup page","status":"passed"}]}],"tests":[]},{"title":"register-screen.spec.ts","transparent":true,"suites":[{"title":"Signup screen","transparent":false,"suites":[],"tests":[{"title":"When the user fills in the form and clicks the signup button, they are taken to the profile creation page","status":"passed"}]}],"tests":[]}],"tests":[]}],"tests":[]};
       // an exception would be thrown if this is not handled correctly (nestedLevel goes below 0)
