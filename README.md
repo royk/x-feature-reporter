@@ -42,18 +42,22 @@ reporter.generateReport(xsuite);
 The below section was generated using [Playwright-feature-reporter](https://github.com/royk/playwright-feature-reporter), which is based on this library.
 
 <!-- playwright-feature-reporter--start -->
+## Core features
+  ### Suites
+  - ✅ Merge suites with the same lineage and name. merge their results under the same suite (lineage = parents suite names)
+  - ✅ Merge suites with the same name and the same lineage on different lineage branches
+  - ✅ Don't merge suites with the same name but different lineage
 ## Markdown generation
+- ✅ Don't output suites containing only non-behavioral tests
+- ✅ Don't output suites marked as transparent. Their children will be outputted
   ### Suites (headings)
   - ✅ Suites appear as headings. Nested Suites are nested headings
-  - ✅ Suites can be marked as transparent: They will not be printed but their children will be printed
-  - ✅ Suites with the same name have their results merged, and the heading is shown only once
-  - ✅ Suites containing only non-behavioral tests are not shown in the report
   ### TestResults (features)
   - ✅ TestResults appear as list items representing features. Each feature is visually marked as Passing ✅, Failing ❌ or Skipped 🚧
-  - ✅ Only XTestResults with testType 'behavior' appear as features. If testType is note specified, it's assumed to be 'behavior'
+  - ✅ Only XTestResults with testType 'behavior' appear as features. Non-behavioral tests aren't shown in the report (if testType is not specified, it's assumed to be 'behavior')
   - ✅ Features can nest under other features using a '-' prefix
     - ✅ Features can nest multiple levels deep using multiple '-' prefixes
-  ### Embedding
+  ### Embedding the report in an existing file
   - ✅ The features list is embedded in an existing file between placeholders
   - ✅ The closing placeholder can be ommitted if the feature list is intended as the last content in the file
   ### Options

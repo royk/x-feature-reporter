@@ -16,6 +16,6 @@ export interface XAdapter {
 export declare class XFeatureReporter {
     constructor(outputAdapter?: XAdapter);
     private outputAdapter;
-    _mergeSuites(suite: XTestSuite, suiteStructure: Record<string, XTestSuite>): XTestSuite;
+    _mergeSuites(suite: XTestSuite, suiteStructure: Record<string, XTestSuite>, lineage: string): XTestSuite;
     generateReport(results: XTestSuite): void;
 }

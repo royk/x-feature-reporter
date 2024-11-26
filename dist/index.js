@@ -12,11 +12,13 @@ class XFeatureReporter {
         if (suiteStructure[fullLineage]) {
             suiteStructure[fullLineage].tests.push(...suite.tests);
             suiteStructure[fullLineage].suites.push(...suite.suites);
+            suite.suites && suite.suites.forEach((ss) => {
+                this._mergeSuites(ss, suiteStructure, fullLineage);
+            });
             suite.tests = [];
             suite.suites = [];
         }
         else {
-            console.log(`Adding suite ${fullLineage}`);
             suiteStructure[fullLineage] = suite;
         }
         suite.suites && suite.suites.forEach((ss) => {
