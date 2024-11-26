@@ -70,7 +70,7 @@ test.describe("Markdown generation", () => {
       
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
-    test("Suites can be marked as transparent: They will not be printed but their children will be printed", () => {
+    test("Don't print suites marked as transparent. Their children will be printed", () => {
       const rootSuite: XTestSuite = {
         title: 'dont print',
         transparent: true,
@@ -97,7 +97,7 @@ test.describe("Markdown generation", () => {
       
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
-    test("Suites with the same name have their results merged, and the heading is shown only once", () => {
+    test("Merge suites with the same lineage and name. Show their results under the same heading", () => {
       const rootSuite: XTestSuite = {
         title: 'dont print',
         transparent: true,
@@ -135,7 +135,59 @@ test.describe("Markdown generation", () => {
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
-    test("Suites containing only non-behavioral tests are not shown in the report", () => {
+    test("Don't merge suites with the same name but a different lineage (parent suite names)", () => {
+      const rootSuite: XTestSuite = {
+        title: 'dont print',
+        transparent: true,
+        suites: [],
+        tests: []
+      };
+      const parentSuite1: XTestSuite = {
+        title: 'dont print 1',
+        transparent: true,
+        suites: [],
+        tests: []
+      };
+      const parentSuite2: XTestSuite = {
+        title: 'dont print ',
+        transparent: true,
+        suites: [],
+        tests: []
+      };
+  
+      const testSuite1: XTestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: []
+      };
+      const testSuite2: XTestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: []
+      };
+      rootSuite.suites.push(parentSuite1);
+      rootSuite.suites.push(parentSuite2);
+      parentSuite1.suites.push(testSuite1);
+      parentSuite2.suites.push(testSuite2);
+      const testCase1: XTestResult = {
+        title: caseTitle,
+        status: 'passed',
+        testType: TEST_TYPE_BEHAVIOR
+      };
+      testSuite1.tests.push(testCase1);
+      const testCase2: XTestResult = {
+        title: caseTitle2,
+        status: 'passed',
+        testType: TEST_TYPE_BEHAVIOR
+      };
+      testSuite2.tests.push(testCase2);
+      reporter.generateReport(rootSuite);
+
+      const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
+      const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+      expect(actualMarkdown).toBe(expectedMarkdown+expectedMarkdown);
+    });
+    test("Don't print suites containing only non-behavioral tests", () => {
       const testSuite1: XTestSuite = {
         title: featureTitle,
         suites: [],
