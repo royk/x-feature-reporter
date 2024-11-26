@@ -7,23 +7,25 @@ class XFeatureReporter {
     constructor(outputAdapter) {
         this.outputAdapter = outputAdapter || new markdown_1.MarkdownAdapter();
     }
-    _mergeSuites(suite, suiteStructure) {
-        if (suiteStructure[suite.title]) {
-            suiteStructure[suite.title].tests.push(...suite.tests);
-            suiteStructure[suite.title].suites.push(...suite.suites);
+    _mergeSuites(suite, suiteStructure, lineage) {
+        const fullLineage = `${lineage}/${suite.title}`;
+        if (suiteStructure[fullLineage]) {
+            suiteStructure[fullLineage].tests.push(...suite.tests);
+            suiteStructure[fullLineage].suites.push(...suite.suites);
             suite.tests = [];
             suite.suites = [];
         }
         else {
-            suiteStructure[suite.title] = suite;
+            console.log(`Adding suite ${fullLineage}`);
+            suiteStructure[fullLineage] = suite;
         }
         suite.suites && suite.suites.forEach((ss) => {
-            this._mergeSuites(ss, suiteStructure);
+            this._mergeSuites(ss, suiteStructure, fullLineage);
         });
         return suite;
     }
     generateReport(results) {
-        const mergedSuite = this._mergeSuites(results, {});
+        const mergedSuite = this._mergeSuites(results, {}, '');
         this.outputAdapter.generateReport(mergedSuite);
     }
 }
