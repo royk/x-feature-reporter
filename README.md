@@ -48,13 +48,13 @@ The below section was generated using [Playwright-feature-reporter](https://gith
   - ✅ Merge suites with the same name and the same lineage on different lineage branches
   - ✅ Don't merge suites with the same name but different lineage
 ## Markdown generation
-- ✅ Don't output suites containing only non-behavioral tests
-- ✅ Don't output suites marked as transparent. Their children will be outputted
+- ✅ Don't output suites containing only non-behavioral tests (TODO: move to core)
+- ✅ Don't output suites marked as transparent. Their children will be outputted (TODO: move to core)
   ### Suites (headings)
   - ✅ Suites appear as headings. Nested Suites are nested headings
   ### TestResults (features)
   - ✅ TestResults appear as list items representing features. Each feature is visually marked as Passing ✅, Failing ❌ or Skipped 🚧
-  - ✅ Only XTestResults with testType 'behavior' appear as features. Non-behavioral tests aren't shown in the report (if testType is not specified, it's assumed to be 'behavior')
+  - ✅ Only XTestResults with testType 'behavior' appear as features. Non-behavioral tests aren't shown in the report (if testType is not specified, it's assumed to be 'behavior') (TODO: move to core)
   - ✅ Features can nest under other features using a '-' prefix
     - ✅ Features can nest multiple levels deep using multiple '-' prefixes
   ### Embedding the report in an existing file
