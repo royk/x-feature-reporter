@@ -50,10 +50,27 @@ export class XFeatureReporter  {
     return [suite];
   }
 
+  _removeNonBehavioralTests(suite: XTestSuite) {
+    const removalCandidates = [];
+    suite.tests = suite.tests.filter((t) => !t.testType || t.testType === TEST_TYPE_BEHAVIOR);
+    if (suite.tests.length === 0) {
+      removalCandidates.push(suite);
+    }
+    suite.suites && suite.suites.forEach((s) => {
+      this._removeNonBehavioralTests(s);
+    });
+    // reverse iteration to avoid mutating the array while iterating over it
+    for (let i = removalCandidates.length - 1; i >= 0; i--) {
+      if (suite.suites.length ===0 || suite.suites.every((s) => s.transparent)) {
+        suite.transparent = true;
+      }
+    }
+  }
+
   generateReport(results: XTestSuite) {
+    this._removeNonBehavioralTests(results);
     const mergedSuite = this._mergeSuites(results, {}, '');
     const opaqueSuites = this._removeTransparentSuites(mergedSuite);
-    
     this.outputAdapter.generateReport(opaqueSuites);
   }
 }

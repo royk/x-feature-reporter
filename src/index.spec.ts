@@ -197,6 +197,53 @@ test.describe("Core features", () => {
       });
     });
   });
+  test.describe("TestResults", () => {
+    test.describe("Test types", () => {
+      test("Don't output suites containing only non-behavioral tests", () => {
+        const testSuite1: XTestSuite = {
+          title: featureTitle,
+          suites: [],
+          tests: []
+        };
+        const testCase1: XTestResult = {
+          title: caseTitle,
+          status: 'passed',
+          testType: 'edge-case'
+        };
+        testSuite1.tests.push(testCase1);
+        reporter = new XFeatureReporter(new JsonAdapter());
+        reporter.generateReport(testSuite1);
+        const expectedOutput = `[]`;
+        const actualOutput = writeFileSyncStub.getCall(0)?.args[1];
+        expect(actualOutput).toBe(expectedOutput);
+      });
+      test("Don't output suites containing suits containing only non-behavioral tests",
+        {annotation: [{type: 'test-type', description: 'edge-case'}]}, () => {
+        const testSuite1: XTestSuite = {
+          title: featureTitle,
+          suites: [],
+          tests: []
+        };
+        const testSuite2: XTestSuite = {
+          title: subfeatureTitle,
+          suites: [],
+          tests: []
+        };
+        const testCase1: XTestResult = {
+          title: caseTitle,
+          status: 'passed',
+          testType: 'edge-case'
+        };
+        testSuite2.tests.push(testCase1);
+        testSuite1.suites.push(testSuite2);
+        reporter = new XFeatureReporter(new JsonAdapter());
+        reporter.generateReport(testSuite1);
+        const expectedOutput = `[]`;
+        const actualOutput = writeFileSyncStub.getCall(0)?.args[1];
+        expect(actualOutput).toBe(expectedOutput);
+      });
+    });
+  });
 });
 test.describe("Markdown generation", () => {
   test.beforeEach(() => {
@@ -242,23 +289,7 @@ test.describe("Markdown generation", () => {
       });
       
     });
-    test("Don't output suites containing only non-behavioral tests (TODO: move to core)", () => {
-      const testSuite1: XTestSuite = {
-        title: featureTitle,
-        suites: [],
-        tests: []
-      };
-      const testCase1: XTestResult = {
-        title: caseTitle,
-        status: 'passed',
-        testType: 'edge-case'
-      };
-      testSuite1.tests.push(testCase1);
-      reporter.generateReport(testSuite1);
-      const expectedMarkdown = `\n`;
-      const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
-      expect(actualMarkdown).toBe(expectedMarkdown);
-    });
+    
     
     test.describe("TestResults (features)", () => {
       test(`TestResults appear as list items representing features. Each feature is visually marked as Passing ${TEST_PREFIX_PASSED}, Failing ${TEST_PREFIX_FAILED} or Skipped ${TEST_PREFIX_SKIPPED}`, () => {
