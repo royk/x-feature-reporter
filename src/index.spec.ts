@@ -164,7 +164,34 @@ test.describe("Core features", () => {
       const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
-    
+    test("Don't output suites marked as transparent. Their children will be outputted", () => {
+      const rootSuite: XTestSuite = {
+        title: 'dont print',
+        transparent: true,
+        suites: [],
+        tests: []
+      };
+  
+      const testSuite: XTestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: []
+      };
+      rootSuite.suites.push(testSuite);
+      const testCase: XTestResult = {
+        title: caseTitle,
+        status: 'passed',
+        testType: TEST_TYPE_BEHAVIOR
+      };
+      testSuite.tests.push(testCase);
+      reporter = new XFeatureReporter(new JsonAdapter());
+      reporter.generateReport(rootSuite);
+  
+      const expectedMarkdown = `[{"title":"Feature title","suites":[],"tests":[{"title":"case title","status":"passed","testType":"behavior"}]}]`;
+      const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+      
+      expect(actualMarkdown).toBe(expectedMarkdown);
+    });
     
   });
 });
@@ -242,33 +269,7 @@ test.describe("Markdown generation", () => {
     const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
     expect(actualMarkdown).toBe(expectedMarkdown);
   });
-  test("Don't output suites marked as transparent. Their children will be outputted (TODO: move to core)", () => {
-    const rootSuite: XTestSuite = {
-      title: 'dont print',
-      transparent: true,
-      suites: [],
-      tests: []
-    };
-
-    const testSuite: XTestSuite = {
-      title: featureTitle,
-      suites: [],
-      tests: []
-    };
-    rootSuite.suites.push(testSuite);
-    const testCase: XTestResult = {
-      title: caseTitle,
-      status: 'passed',
-      testType: TEST_TYPE_BEHAVIOR
-    };
-    testSuite.tests.push(testCase);
-    reporter.generateReport(rootSuite);
-
-    const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
-    const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
-    
-    expect(actualMarkdown).toBe(expectedMarkdown);
-  });
+ 
   test.describe("TestResults (features)", () => {
     test(`TestResults appear as list items representing features. Each feature is visually marked as Passing ${TEST_PREFIX_PASSED}, Failing ${TEST_PREFIX_FAILED} or Skipped ${TEST_PREFIX_SKIPPED}`, () => {
       const testSuite: XTestSuite = {
@@ -476,6 +477,7 @@ test.describe("JSON generation", () => {
     const suite = json as XTestSuite;
     reporter.generateReport(suite as XTestSuite);
     const fileContent = writeFileSyncStub.getCall(0)?.args[1];
-    expect(fileContent).toBe(JSON.stringify(json));
+    const strippedJson = "[{\"title\":\"Features\",\"transparent\":false,\"suites\":[{\"title\":\"Suite A\",\"transparent\":false,\"suites\":[],\"tests\":[{\"title\":\"Test A\",\"status\":\"passed\"}]},{\"title\":\"Suite B\",\"transparent\":false,\"suites\":[],\"tests\":[{\"title\":\"Test B\",\"status\":\"passed\"}]}],\"tests\":[]}]";
+    expect(fileContent).toBe(strippedJson);
   });
 });

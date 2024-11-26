@@ -15,7 +15,7 @@ export type XTestResult = {
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 
 export interface XAdapter {
-  generateReport(results: XTestSuite): void;
+  generateReport(results: XTestSuite[]): void;
 }
 export class XFeatureReporter  {
   constructor(outputAdapter?: XAdapter) {
@@ -34,17 +34,26 @@ export class XFeatureReporter  {
       });
       suite.tests = [];
       suite.suites = [];
-    } else {
-      suiteStructure[fullLineage] = suite;
-    }
+      } else {
+        suiteStructure[fullLineage] = suite;
+      }
     suite.suites && suite.suites.forEach((ss) => {
       this._mergeSuites(ss, suiteStructure, fullLineage);
-    });
+      });
     return suite;
+  }
+
+  _removeTransparentSuites(suite: XTestSuite): XTestSuite[] {
+    if (suite.transparent) {
+      return suite.suites.flatMap((s) => this._removeTransparentSuites(s));
+    }
+    return [suite];
   }
 
   generateReport(results: XTestSuite) {
     const mergedSuite = this._mergeSuites(results, {}, '');
-    this.outputAdapter.generateReport(mergedSuite);
+    const opaqueSuites = this._removeTransparentSuites(mergedSuite);
+    
+    this.outputAdapter.generateReport(opaqueSuites);
   }
 }

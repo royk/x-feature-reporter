@@ -10,7 +10,7 @@ export class JsonAdapter implements XAdapter {
         this.adapterOptions = adapterOptions || {outputFile: 'report.json'};
     }
     private adapterOptions: JsonAdapterOptions;
-    generateReport(results: XTestSuite) {
+    generateReport(results: XTestSuite[]) {
         fs.writeFileSync(this.adapterOptions.outputFile, JSON.stringify(results));
     }
 }   

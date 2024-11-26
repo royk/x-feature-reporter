@@ -106,10 +106,12 @@ export class MarkdownAdapter implements XAdapter {
           fs.writeFileSync(outputFile, this.stringBuilder);
         }
       }
-    generateReport(results: XTestSuite) {
+    generateReport(results: XTestSuite[]) {
         this.stringBuilder = '\n';
         this.nestedLevel = 0;
-        this._printSuite(results);
+        results.forEach((result) => {
+          this._printSuite(result);
+        });
         if (this.adapterOptions.fullReportLink) {
             this.stringBuilder += `\n[Test report](${this.adapterOptions.fullReportLink})\n`;
         }
