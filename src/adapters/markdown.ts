@@ -39,7 +39,7 @@ export class MarkdownAdapter implements XAdapter {
     
       _printSuite(s: XTestSuite) {
         const myNestedLevel = this.nestedLevel;
-        const headerPrefix = '  '.repeat(myNestedLevel) + '#'.repeat(myNestedLevel+2);
+        const headerPrefix = '#'.repeat(myNestedLevel+2);
         const hasNestedSuites = s.suites && s.suites.length > 0;
         const hasTests = s.tests && s.tests.length > 0;
         if (!hasTests && !hasNestedSuites) {
@@ -65,7 +65,7 @@ export class MarkdownAdapter implements XAdapter {
             additionalNesting = testTitle.indexOf(' ');
             testTitle = testTitle.slice(additionalNesting+1);
           }
-          const listPrefix = '  '.repeat(myNestedLevel + additionalNesting) + '-';
+          const listPrefix = ' -';
           this.stringBuilder += `${listPrefix} ${this._getOutcomeIcon(test)} ${testTitle}\n`;
         });
           

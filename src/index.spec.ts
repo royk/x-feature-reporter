@@ -59,7 +59,7 @@ test.describe("Core features", () => {
         testSuite2.tests.push(testCase2);
         reporter.generateReport(rootSuite);
         
-        const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
+        const expectedMarkdown = `\n## ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
         const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
         expect(actualMarkdown).toBe(expectedMarkdown);
       });
@@ -110,7 +110,7 @@ test.describe("Core features", () => {
         };
         testSuite2.tests.push(testCase2);
         reporter.generateReport(rootSuite);
-        const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
+        const expectedMarkdown = `\n## ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
         const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
         expect(actualMarkdown).toBe(expectedMarkdown);
       });
@@ -161,7 +161,7 @@ test.describe("Core features", () => {
         };
         testSuite2.tests.push(testCase2);
         reporter.generateReport(rootSuite);
-        const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
+        const expectedMarkdown = `\n## ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n## ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
         const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
         expect(actualMarkdown).toBe(expectedMarkdown);
       });
@@ -260,7 +260,7 @@ test.describe("Markdown generation", () => {
         const json = [{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":[],"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}];
         const mdAdapter = new MarkdownAdapter();
         mdAdapter.generateReport(json as XTestSuite[]);
-        expect(mdAdapter._getStringBuilder()).toBe(`\n## Features\n  ### Suite A\n  - ${TEST_PREFIX_PASSED} Test A\n  ### Suite B\n  - ${TEST_PREFIX_PASSED} Test B\n`);
+        expect(mdAdapter._getStringBuilder()).toBe(`\n## Features\n### Suite A\n - ${TEST_PREFIX_PASSED} Test A\n### Suite B\n - ${TEST_PREFIX_PASSED} Test B\n`);
       });
       test("Suites appear as headings. Nested Suites are nested headings", () => {
         const testSuite: XTestSuite = {
@@ -282,7 +282,7 @@ test.describe("Markdown generation", () => {
         testSuite2.tests.push(testCase);
         reporter.generateReport(testSuite);
         
-        const expectedMarkdown = `\n## ${featureTitle}\n  ### ${subfeatureTitle}\n  - ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
+        const expectedMarkdown = `\n## ${featureTitle}\n### ${subfeatureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
         const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
         
         expect(actualMarkdown).toBe(expectedMarkdown);
@@ -309,7 +309,7 @@ test.describe("Markdown generation", () => {
         testSuite.tests.push(failedCase);
         testSuite.tests.push(skippedCase);
         reporter.generateReport(testSuite);
-        const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_FAILED} ${caseTitle}\n- ${TEST_PREFIX_SKIPPED} ${caseTitle2}\n`;
+        const expectedMarkdown = `\n## ${featureTitle}\n - ${TEST_PREFIX_FAILED} ${caseTitle}\n - ${TEST_PREFIX_SKIPPED} ${caseTitle2}\n`;
         const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
         expect(actualMarkdown).toBe(expectedMarkdown);
       });
@@ -331,7 +331,7 @@ test.describe("Markdown generation", () => {
         testSuite.tests.push(testCase1);
         testSuite.tests.push(testCase2);
         reporter.generateReport(testSuite);
-        const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
+        const expectedMarkdown = `\n## ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
         const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
         expect(actualMarkdown).toBe(expectedMarkdown);
       });
@@ -353,7 +353,7 @@ test.describe("Markdown generation", () => {
         testSuite.tests.push(testCase1);
         testSuite.tests.push(testCase2);
         reporter.generateReport(testSuite);
-        const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n  - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
+        const expectedMarkdown = `\n## ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
         const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
         expect(actualMarkdown).toBe(expectedMarkdown);
       });
@@ -375,7 +375,7 @@ test.describe("Markdown generation", () => {
         testSuite.tests.push(testCase1);
         testSuite.tests.push(testCase2);
         reporter.generateReport(testSuite);
-        const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n    - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
+        const expectedMarkdown = `\n## ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
         const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
         expect(actualMarkdown).toBe(expectedMarkdown);
       });
@@ -401,7 +401,7 @@ test.describe("Markdown generation", () => {
         sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd+additionalContent);
         
         reporter.generateReport(testSuite);
-        const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
+        const expectedMarkdown = `\n## ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
         const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd + additionalContent;
         const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
         expect(actualMarkdown).toBe(expectedContent);
@@ -423,7 +423,7 @@ test.describe("Markdown generation", () => {
         sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd);
         
         reporter.generateReport(testSuite);
-        const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
+        const expectedMarkdown = `\n## ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
         const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd;
         const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
         expect(actualMarkdown).toBe(expectedContent);
@@ -454,7 +454,7 @@ test.describe("Markdown generation", () => {
         sinon.stub(fs, 'readFileSync').returns(initialContent+embeddingPlaceholder+oldContent+embeddingPlaceholderEnd);
         
         reporter.generateReport(testSuite);
-        const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
+        const expectedMarkdown = `\n## ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
         const expectedContent = initialContent + embeddingPlaceholder + expectedMarkdown + embeddingPlaceholderEnd;
         const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
         expect(actualMarkdown).toBe(expectedContent);
@@ -476,7 +476,7 @@ test.describe("Markdown generation", () => {
         
         reporter.generateReport(testSuite);
         
-        const expectedMarkdown = `\n## ${featureTitle}\n- ${TEST_PREFIX_PASSED} ${caseTitle}\n\n[Test report](${fullReportLink})\n`;
+        const expectedMarkdown = `\n## ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n\n[Test report](${fullReportLink})\n`;
         const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
         
         expect(actualMarkdown).toBe(expectedMarkdown);
