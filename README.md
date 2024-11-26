@@ -47,9 +47,9 @@ The below section was generated using [Playwright-feature-reporter](https://gith
   - ✅ Merge suites with the same lineage and name. merge their results under the same suite (lineage = parents suite names)
   - ✅ Merge suites with the same name and the same lineage on different lineage branches
   - ✅ Don't merge suites with the same name but different lineage
+  - ✅ Don't output suites marked as transparent. Their children will be outputted
 ## Markdown generation
 - ✅ Don't output suites containing only non-behavioral tests (TODO: move to core)
-- ✅ Don't output suites marked as transparent. Their children will be outputted (TODO: move to core)
   ### Suites (headings)
   - ✅ Suites appear as headings. Nested Suites are nested headings
   ### TestResults (features)

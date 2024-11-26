@@ -18,5 +18,5 @@ export declare class MarkdownAdapter implements XAdapter {
     _getOutcomeIcon(testCase: XTestResult): "🚧" | "✅" | "❌";
     _printSuite(s: XTestSuite): void;
     _generateMarkdown(outputFile: string, options: MarkdownAdapterOptions): void;
-    generateReport(results: XTestSuite): void;
+    generateReport(results: XTestSuite[]): void;
 }

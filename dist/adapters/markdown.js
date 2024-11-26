@@ -100,7 +100,9 @@ class MarkdownAdapter {
     generateReport(results) {
         this.stringBuilder = '\n';
         this.nestedLevel = 0;
-        this._printSuite(results);
+        results.forEach((result) => {
+            this._printSuite(result);
+        });
         if (this.adapterOptions.fullReportLink) {
             this.stringBuilder += `\n[Test report](${this.adapterOptions.fullReportLink})\n`;
         }

@@ -26,9 +26,16 @@ class XFeatureReporter {
         });
         return suite;
     }
+    _removeTransparentSuites(suite) {
+        if (suite.transparent) {
+            return suite.suites.flatMap((s) => this._removeTransparentSuites(s));
+        }
+        return [suite];
+    }
     generateReport(results) {
         const mergedSuite = this._mergeSuites(results, {}, '');
-        this.outputAdapter.generateReport(mergedSuite);
+        const opaqueSuites = this._removeTransparentSuites(mergedSuite);
+        this.outputAdapter.generateReport(opaqueSuites);
     }
 }
 exports.XFeatureReporter = XFeatureReporter;

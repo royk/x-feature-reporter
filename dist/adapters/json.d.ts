@@ -6,5 +6,5 @@ export type JsonAdapterOptions = {
 export declare class JsonAdapter implements XAdapter {
     constructor(adapterOptions?: JsonAdapterOptions);
     private adapterOptions;
-    generateReport(results: XTestSuite): void;
+    generateReport(results: XTestSuite[]): void;
 }
