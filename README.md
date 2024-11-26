@@ -44,10 +44,12 @@ The below section was generated using [Playwright-feature-reporter](https://gith
 <!-- playwright-feature-reporter--start -->
 ## Core features
   ### Suites
-  - ✅ Merge suites with the same lineage and name. merge their results under the same suite (lineage = parents suite names)
-  - ✅ Merge suites with the same name and the same lineage on different lineage branches
-  - ✅ Don't merge suites with the same name but different lineage
-  - ✅ Don't output suites marked as transparent. Their children will be outputted
+    #### Merging suites
+    - ✅ Merge suites with the same lineage and name. merge their results under the same suite (lineage = parents suite names)
+    - ✅ Merge suites with the same name and the same lineage on different lineage branches
+    - ✅ Don't merge suites with the same name but different lineage
+    #### Transparent suites (suites that exist only to group other suites but aren't outputted as headings)
+    - ✅ Don't output suites marked as transparent. Their children will be outputted
 ## Markdown generation
 - ✅ Don't output suites containing only non-behavioral tests (TODO: move to core)
   ### Suites (headings)
