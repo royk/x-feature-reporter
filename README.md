@@ -55,8 +55,8 @@ The below section was generated using [Playwright-feature-reporter](https://gith
 ## Markdown generation
 ### Suites (headings)
  - ✅ Suites appear as headings. Nested Suites are nested headings
-### TestResults (features)
- - ✅ TestResults appear as list items representing features. Each feature is visually marked as Passing ✅, Failing ❌ or Skipped 🚧
+### Tests (features)
+ - ✅ Tests appear as list items representing features. Each feature is visually marked as Passing ✅, Failing ❌ or Skipped 🚧
  - ✅ Features can nest under other features using a '-' prefix
  - ✅ Features can nest multiple levels deep using multiple '-' prefixes
 ### Embedding the report in an existing file
