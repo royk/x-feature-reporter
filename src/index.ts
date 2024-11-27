@@ -69,8 +69,8 @@ export class XFeatureReporter  {
 
   generateReport(results: XTestSuite) {
     this._removeNonBehavioralTests(results);
-    const mergedSuite = this._mergeSuites(results, {}, '');
-    const opaqueSuites = this._removeTransparentSuites(mergedSuite);
+    this._mergeSuites(results, {}, '');
+    const opaqueSuites = this._removeTransparentSuites(results);
     this.outputAdapter.generateReport(opaqueSuites);
   }
 }
