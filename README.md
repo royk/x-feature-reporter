@@ -43,31 +43,31 @@ The below section was generated using [Playwright-feature-reporter](https://gith
 
 <!-- playwright-feature-reporter--start -->
 ## Core features
-  ### Suites
-    #### Merging
-    - ✅ Merge suites with the same lineage and name. merge their results under the same suite (lineage = parents suite names)
-    - ✅ Merge suites with the same name and the same lineage on different lineage branches
-    - ✅ Don't merge suites with the same name but different lineage
-    #### Transparency (suites that exist only to group other suites but aren't outputted as headings)
-    - ✅ Don't output suites marked as transparent. Their children will be outputted
-  ### TestResults
-    #### Test types
-    - ✅ Don't output suites containing only non-behavioral tests
+### Suites
+#### Merging
+ - ✅ Merge suites with the same lineage and name. merge their results under the same suite (lineage = parents suite names)
+ - ✅ Merge suites with the same name and the same lineage on different lineage branches
+ - ✅ Don't merge suites with the same name but different lineage
+#### Transparency (suites that exist only to group other suites but aren't outputted as headings)
+ - ✅ Don't output suites marked as transparent. Their children will be outputted
+### TestResults
+#### Test types
+ - ✅ Don't output suites containing only non-behavioral tests
 ## Markdown generation
-  ### Suites (headings)
-  - ✅ Suites appear as headings. Nested Suites are nested headings
-  ### TestResults (features)
-  - ✅ TestResults appear as list items representing features. Each feature is visually marked as Passing ✅, Failing ❌ or Skipped 🚧
-  - ✅ Only XTestResults with testType 'behavior' appear as features. Non-behavioral tests aren't shown in the report (if testType is not specified, it's assumed to be 'behavior') (TODO: move to core)
-  - ✅ Features can nest under other features using a '-' prefix
-    - ✅ Features can nest multiple levels deep using multiple '-' prefixes
-  ### Embedding the report in an existing file
-  - ✅ The features list is embedded in an existing file between placeholders
-  - ✅ The closing placeholder can be ommitted if the feature list is intended as the last content in the file
-  ### Options
-  - ✅ Placeholder prefix can be specified using the 'embeddingPlaceholder' option
-  - ✅ A link to a full test report will be included when the 'fullReportLink' option is provided
+### Suites (headings)
+ - ✅ Suites appear as headings. Nested Suites are nested headings
+### TestResults (features)
+ - ✅ TestResults appear as list items representing features. Each feature is visually marked as Passing ✅, Failing ❌ or Skipped 🚧
+ - ✅ Only XTestResults with testType 'behavior' appear as features. Non-behavioral tests aren't shown in the report (if testType is not specified, it's assumed to be 'behavior') (TODO: move to core)
+ - ✅ Features can nest under other features using a '-' prefix
+ - ✅ Features can nest multiple levels deep using multiple '-' prefixes
+### Embedding the report in an existing file
+ - ✅ The features list is embedded in an existing file between placeholders
+ - ✅ The closing placeholder can be ommitted if the feature list is intended as the last content in the file
+### Options
+ - ✅ Placeholder prefix can be specified using the 'embeddingPlaceholder' option
+ - ✅ A link to a full test report will be included when the 'fullReportLink' option is provided
 ## JSON generation
-- ✅ Generates a JSON file
+ - ✅ Generates a JSON file
 
 [Test report](https://raw.githack.com/royk/x-feature-reporter/refs/heads/main/playwright-report/index.html)
