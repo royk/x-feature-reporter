@@ -165,7 +165,7 @@ test.describe("Core features", () => {
       expect(actualMarkdown).toBe(expectedMarkdown);
     });
   });
-  test.describe("Transparency (suites that exist only to group other suites but aren't outputted as headings)", () => {
+  test.describe("Transparency", () => {
     test("Don't output suites marked as transparent. Their children will be outputted", () => {
       const rootSuite: XTestSuite = {
         title: 'dont print',
