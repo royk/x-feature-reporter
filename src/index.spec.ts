@@ -309,8 +309,8 @@ test.describe("Core features", () => {
       });
       
       
-      test.describe("TestResults (features)", () => {
-        test(`TestResults appear as list items representing features. Each feature is visually marked as Passing ${TEST_PREFIX_PASSED}, Failing ${TEST_PREFIX_FAILED} or Skipped ${TEST_PREFIX_SKIPPED}`, () => {
+      test.describe("Tests (features)", () => {
+        test(`Tests appear as list items representing features. Each feature is visually marked as Passing ${TEST_PREFIX_PASSED}, Failing ${TEST_PREFIX_FAILED} or Skipped ${TEST_PREFIX_SKIPPED}`, () => {
           const testSuite: XTestSuite = {
             title: featureTitle,
             suites: [],
