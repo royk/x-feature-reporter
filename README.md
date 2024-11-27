@@ -47,7 +47,7 @@ The below section was generated using [Playwright-feature-reporter](https://gith
  - ✅ Merge suites with the same lineage and name. merge their results under the same suite (lineage = parents suite names)
  - ✅ Merge suites with the same name and the same lineage on different lineage branches
  - ✅ Don't merge suites with the same name but different lineage
-### Transparency (suites that exist only to group other suites but aren't outputted as headings)
+### Transparency
  - ✅ Don't output suites marked as transparent. Their children will be outputted
 ### Test types
  - ✅ Only tests with testType 'behavior' appear as features. Non-behavioral tests aren't shown in the report (if testType is not specified, it's assumed to be 'behavior')
