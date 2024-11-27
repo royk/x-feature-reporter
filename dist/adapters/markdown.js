@@ -56,8 +56,7 @@ class MarkdownAdapter {
                 additionalNesting = testTitle.indexOf(' ');
                 testTitle = testTitle.slice(additionalNesting + 1);
             }
-            const listPrefix = ' -';
-            this.stringBuilder += `${listPrefix} ${this._getOutcomeIcon(test)} ${testTitle}\n`;
+            this.stringBuilder += ` - ${this._getOutcomeIcon(test)} ${testTitle}\n`;
         });
         s.suites && s.suites.forEach((ss) => {
             this._printSuite(ss);
