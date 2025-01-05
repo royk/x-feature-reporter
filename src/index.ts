@@ -1,5 +1,5 @@
 import { MarkdownAdapter } from './adapters/markdown';
-
+import levenshtein from 'js-levenshtein';
 export type XTestSuite = {
   title: string;
   suites: XTestSuite[];
@@ -70,9 +70,13 @@ export class XFeatureReporter  {
   }
   
   _detectSuiteChange(suite: XTestSuite, oldTitles: string[]) {
-    const titleExists = oldTitles.find((t) => t === suite.title);
-    if (!titleExists) {
+
+    let minDistance = Math.min(...oldTitles.map(title => levenshtein(suite.title, title)));
+    const ratio = minDistance / suite.title.length;
+    if (minDistance==Infinity) {
       suite.change = 'added';
+    } else if (ratio > 0.3) {
+      suite.change = 'modified';
     }
     suite.suites.forEach((s) => this._detectSuiteChange(s, oldTitles));
     suite.tests.forEach((t) => this._detectTestChange(t, oldTitles));

@@ -272,8 +272,7 @@ test.describe("Core features", () => {
       });
     });
   });
-  test.describe("Change detection", () => {
-    
+  test.describe("Change detection", () => {  
     test.beforeEach(() => {
       reporter = new XFeatureReporter(testAdapter);
     });
@@ -297,6 +296,27 @@ test.describe("Core features", () => {
       reporter.generateReport(rootSuite2, []);
       const report = testAdapter.getReport();
       expect(report[0].change).toBe('added');
+    });
+    test("A suite is marked as 'changed' if it's title is detected as modified", () => {
+      const testCase1: XTestResult = {
+        title: caseTitle,
+        status: 'passed',
+        testType: TEST_TYPE_BEHAVIOR
+      };
+      const newSuite: XTestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: [testCase1],
+      };
+      reporter.generateReport(newSuite, []);
+      const oldReport = testAdapter.getReport();
+      const suite2: XTestSuite = {
+        title: featureTitle + ' modified',
+        suites: [],
+        tests: [testCase1]
+      };
+      reporter.generateReport(suite2, oldReport);
+      expect(suite2.change).toBe('modified');
     });
     test("A new test is marked as 'added'", () => {
       const testCase1: XTestResult = {
