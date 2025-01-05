@@ -1,7 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.XFeatureReporter = exports.TEST_TYPE_BEHAVIOR = void 0;
 const markdown_1 = require("./adapters/markdown");
+const js_levenshtein_1 = __importDefault(require("js-levenshtein"));
 exports.TEST_TYPE_BEHAVIOR = 'behavior';
 class XFeatureReporter {
     constructor(outputAdapter) {
@@ -49,9 +53,13 @@ class XFeatureReporter {
         }
     }
     _detectSuiteChange(suite, oldTitles) {
-        const titleExists = oldTitles.find((t) => t === suite.title);
-        if (!titleExists) {
+        let minDistance = Math.min(...oldTitles.map(title => (0, js_levenshtein_1.default)(suite.title, title)));
+        const ratio = minDistance / suite.title.length;
+        if (minDistance == Infinity) {
             suite.change = 'added';
+        }
+        else if (ratio > 0.3) {
+            suite.change = 'modified';
         }
         suite.suites.forEach((s) => this._detectSuiteChange(s, oldTitles));
         suite.tests.forEach((t) => this._detectTestChange(t, oldTitles));

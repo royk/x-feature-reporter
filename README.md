@@ -54,6 +54,7 @@ The below section was generated using [Playwright-feature-reporter](https://gith
  - ✅ Don't output suites containing only non-behavioral tests
 ## Change detection
  - ✅ A new suite is marked as 'added'
+ - ✅ A suite is marked as 'changed' if it's title is detected as modified
  - ✅ A new test is marked as 'added'
  - ✅ An exsiting suite isn't marked
 ## Markdown generation
