@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import sinon from 'sinon';
 import fs from 'fs';
 import {XFeatureReporter, XTestSuite, XTestResult, TEST_TYPE_BEHAVIOR, XAdapter } from './index';
-import { MarkdownAdapter, TEST_PREFIX_FAILED, TEST_PREFIX_PASSED, TEST_PREFIX_SKIPPED } from './adapters/markdown';
+import { CHANGE_PREFIX_ADDED, MarkdownAdapter, TEST_PREFIX_FAILED, TEST_PREFIX_PASSED, TEST_PREFIX_SKIPPED } from './adapters/markdown';
 import { JsonAdapter } from './adapters/json';
 
 
@@ -384,6 +384,24 @@ test.describe("Core features", () => {
           reporter.generateReport(testSuite);
           
           const expectedMarkdown = `\n## ${featureTitle}\n### ${subfeatureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
+          const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+          
+          expect(actualMarkdown).toBe(expectedMarkdown);
+        });
+        test("New suites are marked as such", () => {
+          const testCase: XTestResult = {
+            title: caseTitle,
+            status: 'passed',
+            testType: TEST_TYPE_BEHAVIOR,
+            change: 'added'
+          };
+          const testSuite: XTestSuite = {
+            title: featureTitle,
+            suites: [],
+            tests: [testCase]
+          };
+          reporter.generateReport(testSuite, []);
+          const expectedMarkdown = `\n## ${CHANGE_PREFIX_ADDED} ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
           const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
           
           expect(actualMarkdown).toBe(expectedMarkdown);

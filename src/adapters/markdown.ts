@@ -5,6 +5,7 @@ export const TEST_PREFIX_SKIPPED = '🚧';
 export const TEST_PREFIX_PASSED = '✅';
 export const TEST_PREFIX_FAILED = '❌';
 
+export const CHANGE_PREFIX_ADDED = '🔥NEW🔥';
 
 export const defaultEmbeddingPlaceholder = 'x-feature-reporter';
 
@@ -50,7 +51,11 @@ export class MarkdownAdapter implements XAdapter {
         if (!hasNestedSuites && s.tests.length === 0) {
           return;
         }
-        this.stringBuilder += `${headerPrefix} ${s.title}\n`;
+        let changePrefix = '';
+        if (s.change === 'added') {
+          changePrefix = `${CHANGE_PREFIX_ADDED} `;
+        }
+        this.stringBuilder += `${headerPrefix} ${changePrefix}${s.title}\n`;
         this.nestedLevel++;
         const testNames = [];
         s.tests.forEach((test) => {
