@@ -54,10 +54,12 @@ The below section was generated using [Playwright-feature-reporter](https://gith
  - ✅ Don't output suites containing only non-behavioral tests
 ## Change detection
  - ✅ A new suite is marked as 'added'
+ - ✅ A new test is marked as 'added'
  - ✅ An exsiting suite isn't marked
 ## Markdown generation
 ### Suites (headings)
  - ✅ Suites appear as headings. Nested Suites are nested headings
+ - ✅ New suites are marked as such
 ### Tests (features)
  - ✅ Tests appear as list items representing features. Each feature is visually marked as Passing ✅, Failing ❌ or Skipped 🚧
  - ✅ Features can nest under other features using a '-' prefix

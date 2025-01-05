@@ -21,7 +21,8 @@ export declare class XFeatureReporter {
     _mergeSuites(suite: XTestSuite, suiteStructure: Record<string, XTestSuite>, lineage: string): XTestSuite;
     _removeTransparentSuites(suite: XTestSuite): XTestSuite[];
     _removeNonBehavioralTests(suite: XTestSuite): void;
-    _checkChange(suite: XTestSuite, oldTitles: string[]): void;
+    _detectSuiteChange(suite: XTestSuite, oldTitles: string[]): void;
+    _detectTestChange(test: XTestResult, oldTitles: string[]): void;
     _markChanges(suites: XTestSuite[], oldResults: XTestSuite[]): void;
     generateReport(results: XTestSuite, oldResults?: XTestSuite[]): void;
 }

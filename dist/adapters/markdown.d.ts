@@ -2,6 +2,7 @@ import { XTestResult, XTestSuite, XAdapter } from "..";
 export declare const TEST_PREFIX_SKIPPED = "\uD83D\uDEA7";
 export declare const TEST_PREFIX_PASSED = "\u2705";
 export declare const TEST_PREFIX_FAILED = "\u274C";
+export declare const CHANGE_PREFIX_ADDED = "\uD83D\uDD25NEW\uD83D\uDD25";
 export declare const defaultEmbeddingPlaceholder = "x-feature-reporter";
 export type MarkdownAdapterOptions = {
     embeddingPlaceholder?: string;

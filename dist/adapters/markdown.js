@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MarkdownAdapter = exports.defaultEmbeddingPlaceholder = exports.TEST_PREFIX_FAILED = exports.TEST_PREFIX_PASSED = exports.TEST_PREFIX_SKIPPED = void 0;
+exports.MarkdownAdapter = exports.defaultEmbeddingPlaceholder = exports.CHANGE_PREFIX_ADDED = exports.TEST_PREFIX_FAILED = exports.TEST_PREFIX_PASSED = exports.TEST_PREFIX_SKIPPED = void 0;
 const fs_1 = __importDefault(require("fs"));
 exports.TEST_PREFIX_SKIPPED = '🚧';
 exports.TEST_PREFIX_PASSED = '✅';
 exports.TEST_PREFIX_FAILED = '❌';
+exports.CHANGE_PREFIX_ADDED = '🔥NEW🔥';
 exports.defaultEmbeddingPlaceholder = 'x-feature-reporter';
 class MarkdownAdapter {
     constructor(adapterOptions) {
@@ -42,7 +43,11 @@ class MarkdownAdapter {
         if (!hasNestedSuites && s.tests.length === 0) {
             return;
         }
-        this.stringBuilder += `${headerPrefix} ${s.title}\n`;
+        let changePrefix = '';
+        if (s.change === 'added') {
+            changePrefix = `${exports.CHANGE_PREFIX_ADDED} `;
+        }
+        this.stringBuilder += `${headerPrefix} ${changePrefix}${s.title}\n`;
         this.nestedLevel++;
         const testNames = [];
         s.tests.forEach((test) => {
