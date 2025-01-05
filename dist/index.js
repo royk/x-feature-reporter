@@ -48,12 +48,22 @@ class XFeatureReporter {
             }
         }
     }
-    _markChanges(opaqueSuites, oldResults) {
-        for (let i = 0; i < opaqueSuites.length; i++) {
-            const oldSuite = oldResults.find((os) => os.title === opaqueSuites[i].title);
-            if (!oldSuite) {
-                opaqueSuites[i].change = 'added';
-            }
+    _checkChange(suite, oldTitles) {
+        const titleExists = oldTitles.find((t) => t === suite.title);
+        if (!titleExists) {
+            suite.change = 'added';
+        }
+        suite.suites.forEach((s) => this._checkChange(s, oldTitles));
+    }
+    _markChanges(suites, oldResults) {
+        function getSuiteTitle(titles, suite) {
+            titles.push(suite.title);
+            suite.suites.forEach((s) => getSuiteTitle(titles, s));
+        }
+        const titles = [];
+        oldResults.forEach((os) => getSuiteTitle(titles, os));
+        for (let i = 0; i < suites.length; i++) {
+            this._checkChange(suites[i], titles);
         }
     }
     generateReport(results, oldResults) {
