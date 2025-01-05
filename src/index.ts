@@ -25,7 +25,7 @@ export class XFeatureReporter  {
   }
   
   private outputAdapter: XAdapter;
-
+  
   _mergeSuites(suite: XTestSuite,suiteStructure: Record<string, XTestSuite>, lineage: string) {
     const fullLineage = `${lineage}/${suite.title}`;
     if (suiteStructure[fullLineage]) {
@@ -36,22 +36,22 @@ export class XFeatureReporter  {
       });
       suite.tests = [];
       suite.suites = [];
-      } else {
-        suiteStructure[fullLineage] = suite;
-      }
+    } else {
+      suiteStructure[fullLineage] = suite;
+    }
     suite.suites && suite.suites.forEach((ss) => {
       this._mergeSuites(ss, suiteStructure, fullLineage);
-      });
+    });
     return suite;
   }
-
+  
   _removeTransparentSuites(suite: XTestSuite): XTestSuite[] {
     if (suite.transparent) {
       return suite.suites.flatMap((s) => this._removeTransparentSuites(s));
     }
     return [suite];
   }
-
+  
   _removeNonBehavioralTests(suite: XTestSuite) {
     const removalCandidates = [];
     suite.tests = suite.tests.filter((t) => !t.testType || t.testType === TEST_TYPE_BEHAVIOR);
@@ -68,22 +68,27 @@ export class XFeatureReporter  {
       }
     }
   }
-
-  _markChanges(opaqueSuites: XTestSuite[], oldResults: XTestSuite[]) {
+  
+  _checkChange(suite: XTestSuite, oldTitles: string[]) {
+    const titleExists = oldTitles.find((t) => t === suite.title);
+    if (!titleExists) {
+      suite.change = 'added';
+    }
+    suite.suites.forEach((s) => this._checkChange(s, oldTitles));
+  }
+  
+  _markChanges(suites: XTestSuite[], oldResults: XTestSuite[]) {
     function getSuiteTitle(titles:string[], suite: XTestSuite) {
       titles.push(suite.title);
       suite.suites.forEach((s) => getSuiteTitle(titles, s));
     }
     const titles = [];
     oldResults.forEach((os) => getSuiteTitle(titles, os));
-    for (let i = 0; i < opaqueSuites.length; i++) {
-      const titleExists = titles.find((t) => t === opaqueSuites[i].title);
-      if (!titleExists) {
-        opaqueSuites[i].change = 'added';
-      }
+    for (let i = 0; i < suites.length; i++) {
+      this._checkChange(suites[i], titles);
     }
   }
-
+  
   generateReport(results: XTestSuite, oldResults?: XTestSuite[]) {
     this._removeNonBehavioralTests(results);
     this._mergeSuites(results, {}, '');
@@ -93,6 +98,6 @@ export class XFeatureReporter  {
     }
     this.outputAdapter.generateReport(opaqueSuites);
   }
-
-
+  
+  
 }

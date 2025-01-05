@@ -317,10 +317,17 @@ test.describe("Core features", () => {
       };
       reporter.generateReport(rootSuite2, []);
       const oldReport = testAdapter.getReport();
-      rootSuite2.suites[0].change = undefined;
+      const newSuite2: XTestSuite = {
+        title: subfeatureTitle,
+        suites: [newSuite],
+        tests: []
+      };
+      rootSuite2.suites = [newSuite2];
+      rootSuite2.suites[0] = newSuite2;
+      newSuite.change = undefined;
       reporter.generateReport(rootSuite2, oldReport);
       const newReport = testAdapter.getReport();
-      expect(newReport[0].change).toBe(undefined);
+      expect(newSuite.change).toBe(undefined);
     });
     
   });
