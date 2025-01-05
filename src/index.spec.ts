@@ -393,19 +393,20 @@ test.describe("Core features", () => {
             title: caseTitle,
             status: 'passed',
             testType: TEST_TYPE_BEHAVIOR,
-            change: 'added'
           };
           const testSuite: XTestSuite = {
             title: featureTitle,
             suites: [],
-            tests: [testCase]
+            tests: [testCase],
+            change: 'added'
           };
-          reporter.generateReport(testSuite, []);
+          reporter.generateReport(testSuite);
           const expectedMarkdown = `\n## ${CHANGE_PREFIX_ADDED} ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
           const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
           
           expect(actualMarkdown).toBe(expectedMarkdown);
         });
+        
         
       });
       
@@ -474,6 +475,24 @@ test.describe("Core features", () => {
           reporter.generateReport(testSuite);
           const expectedMarkdown = `\n## ${featureTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle}\n - ${TEST_PREFIX_PASSED} ${caseTitle2}\n`;
           const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+          expect(actualMarkdown).toBe(expectedMarkdown);
+        });
+        test("New tests are marked as such", () => {
+          const testCase: XTestResult = {
+            title: caseTitle,
+            status: 'passed',
+            testType: TEST_TYPE_BEHAVIOR,
+            change: 'added'
+          };
+          const testSuite: XTestSuite = {
+            title: featureTitle,
+            suites: [],
+            tests: [testCase]
+          };
+          reporter.generateReport(testSuite);
+          const expectedMarkdown = `\n## ${featureTitle}\n - ${CHANGE_PREFIX_ADDED} ${TEST_PREFIX_PASSED} ${caseTitle}\n`;
+          const actualMarkdown = writeFileSyncStub.getCall(0)?.args[1];
+          
           expect(actualMarkdown).toBe(expectedMarkdown);
         });
       });

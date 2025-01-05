@@ -70,7 +70,11 @@ export class MarkdownAdapter implements XAdapter {
             additionalNesting = testTitle.indexOf(' ');
             testTitle = testTitle.slice(additionalNesting+1);
           }
-          this.stringBuilder += ` - ${this._getOutcomeIcon(test)} ${testTitle}\n`;
+          changePrefix = '';
+          if (test.change === 'added') {
+            changePrefix = `${CHANGE_PREFIX_ADDED} `;
+          }
+          this.stringBuilder += ` - ${changePrefix}${this._getOutcomeIcon(test)} ${testTitle}\n`;
         });
           
         s.suites && s.suites.forEach((ss) => {
