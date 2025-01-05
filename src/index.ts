@@ -5,11 +5,13 @@ export type XTestSuite = {
   suites: XTestSuite[];
   tests: XTestResult[];
   transparent?: boolean;
+  change?: "added" | "removed" | "modified";
 };
 export type XTestResult = {
   title: string;
   status: "passed" | "failed" | "skipped";
   testType?: string;
+  change?: "added" | "removed" | "modified";
 };
 
 export const TEST_TYPE_BEHAVIOR = 'behavior';
@@ -67,10 +69,24 @@ export class XFeatureReporter  {
     }
   }
 
-  generateReport(results: XTestSuite) {
+  _markChanges(opaqueSuites: XTestSuite[], oldResults: XTestSuite[]) {
+    for (let i = 0; i < opaqueSuites.length; i++) {
+      const oldSuite = oldResults.find((os) => os.title === opaqueSuites[i].title);
+      if (!oldSuite) {
+        opaqueSuites[i].change = 'added';
+      }
+    }
+  }
+
+  generateReport(results: XTestSuite, oldResults?: XTestSuite[]) {
     this._removeNonBehavioralTests(results);
     this._mergeSuites(results, {}, '');
     const opaqueSuites = this._removeTransparentSuites(results);
+    if (oldResults) {
+      this._markChanges(opaqueSuites, oldResults);
+    }
     this.outputAdapter.generateReport(opaqueSuites);
   }
+
+
 }

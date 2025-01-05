@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import sinon from 'sinon';
 import fs from 'fs';
-import {XFeatureReporter, XTestSuite, XTestResult, TEST_TYPE_BEHAVIOR } from './index';
+import {XFeatureReporter, XTestSuite, XTestResult, TEST_TYPE_BEHAVIOR, XAdapter } from './index';
 import { MarkdownAdapter, TEST_PREFIX_FAILED, TEST_PREFIX_PASSED, TEST_PREFIX_SKIPPED } from './adapters/markdown';
 import { JsonAdapter } from './adapters/json';
 
@@ -14,6 +14,15 @@ const caseTitle = 'case title';
 const caseTitle2 = 'case title 2';
 
 let reporter: XFeatureReporter;
+const testAdapter = new class implements XAdapter {
+  report: XTestSuite[] = [];
+  generateReport(results: XTestSuite[]): void {
+    this.report = results;
+  }
+  getReport() {
+    return this.report;
+  }
+}
 test.describe("Core features", () => {
   test.beforeEach(() => {
     writeFileSyncStub = sinon.stub(fs, 'writeFileSync');
@@ -262,6 +271,34 @@ test.describe("Core features", () => {
         expect(actualOutput).toBe(expectedOutput);
       });
     });
+  });
+  test.describe("Change detection", () => {
+    
+    test.beforeEach(() => {
+      reporter = new XFeatureReporter(testAdapter);
+    });
+    test("A new suite is marked as 'added'", () => {
+      const testCase1: XTestResult = {
+        title: caseTitle,
+        status: 'passed',
+        testType: TEST_TYPE_BEHAVIOR
+      };
+      const newSuite: XTestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: [testCase1],
+      };
+      const rootSuite2: XTestSuite = {
+        title: 'dont print',
+        transparent: true,
+        suites: [newSuite],
+        tests: []
+      };
+      reporter.generateReport(rootSuite2, []);
+      const report = testAdapter.getReport();
+      expect(report[0].change).toBe('added');
+    });
+    
   });
   test.describe("Markdown generation", () => {
     test.beforeEach(() => {
