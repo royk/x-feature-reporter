@@ -272,7 +272,7 @@ test.describe("Core features", () => {
       });
     });
   });
-  test.describe.only("Change detection", () => {
+  test.describe("Change detection", () => {
     
     test.beforeEach(() => {
       reporter = new XFeatureReporter(testAdapter);
