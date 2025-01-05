@@ -64,6 +64,7 @@ The below section was generated using [Playwright-feature-reporter](https://gith
  - ✅ Tests appear as list items representing features. Each feature is visually marked as Passing ✅, Failing ❌ or Skipped 🚧
  - ✅ Features can nest under other features using a '-' prefix
  - ✅ Features can nest multiple levels deep using multiple '-' prefixes
+ - ✅ New tests are marked as such
 ### Embedding the report in an existing file
  - ✅ The features list is embedded in an existing file between placeholders
  - ✅ The closing placeholder can be ommitted if the feature list is intended as the last content in the file
