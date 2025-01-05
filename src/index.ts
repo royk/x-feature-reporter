@@ -70,9 +70,15 @@ export class XFeatureReporter  {
   }
 
   _markChanges(opaqueSuites: XTestSuite[], oldResults: XTestSuite[]) {
+    function getSuiteTitle(titles:string[], suite: XTestSuite) {
+      titles.push(suite.title);
+      suite.suites.forEach((s) => getSuiteTitle(titles, s));
+    }
+    const titles = [];
+    oldResults.forEach((os) => getSuiteTitle(titles, os));
     for (let i = 0; i < opaqueSuites.length; i++) {
-      const oldSuite = oldResults.find((os) => os.title === opaqueSuites[i].title);
-      if (!oldSuite) {
+      const titleExists = titles.find((t) => t === opaqueSuites[i].title);
+      if (!titleExists) {
         opaqueSuites[i].change = 'added';
       }
     }

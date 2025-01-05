@@ -272,7 +272,7 @@ test.describe("Core features", () => {
       });
     });
   });
-  test.describe("Change detection", () => {
+  test.describe.only("Change detection", () => {
     
     test.beforeEach(() => {
       reporter = new XFeatureReporter(testAdapter);
@@ -297,6 +297,30 @@ test.describe("Core features", () => {
       reporter.generateReport(rootSuite2, []);
       const report = testAdapter.getReport();
       expect(report[0].change).toBe('added');
+    });
+    test("An exsiting suite isn't marked", () => {
+      const testCase1: XTestResult = {
+        title: caseTitle,
+        status: 'passed',
+        testType: TEST_TYPE_BEHAVIOR
+      };
+      const newSuite: XTestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: [testCase1],
+      };
+      const rootSuite2: XTestSuite = {
+        title: 'dont print',
+        transparent: true,
+        suites: [newSuite],
+        tests: []
+      };
+      reporter.generateReport(rootSuite2, []);
+      const oldReport = testAdapter.getReport();
+      rootSuite2.suites[0].change = undefined;
+      reporter.generateReport(rootSuite2, oldReport);
+      const newReport = testAdapter.getReport();
+      expect(newReport[0].change).toBe(undefined);
     });
     
   });
