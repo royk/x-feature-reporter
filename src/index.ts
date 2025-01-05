@@ -69,23 +69,36 @@ export class XFeatureReporter  {
     }
   }
   
-  _checkChange(suite: XTestSuite, oldTitles: string[]) {
+  _detectSuiteChange(suite: XTestSuite, oldTitles: string[]) {
     const titleExists = oldTitles.find((t) => t === suite.title);
     if (!titleExists) {
       suite.change = 'added';
     }
-    suite.suites.forEach((s) => this._checkChange(s, oldTitles));
+    suite.suites.forEach((s) => this._detectSuiteChange(s, oldTitles));
+    suite.tests.forEach((t) => this._detectTestChange(t, oldTitles));
+  }
+
+  _detectTestChange(test: XTestResult, oldTitles: string[]) {
+    const titleExists = oldTitles.find((t) => t === test.title);
+    if (!titleExists) {
+      test.change = 'added';
+    }
   }
   
   _markChanges(suites: XTestSuite[], oldResults: XTestSuite[]) {
     function getSuiteTitle(titles:string[], suite: XTestSuite) {
       titles.push(suite.title);
       suite.suites.forEach((s) => getSuiteTitle(titles, s));
+      suite.tests.forEach((t) => testTitles.push(t.title));
     }
-    const titles = [];
-    oldResults.forEach((os) => getSuiteTitle(titles, os));
+    const suiteTitles = [];
+    const testTitles = [];
+    oldResults.forEach((os) => {
+      getSuiteTitle(suiteTitles, os);
+      os.tests.forEach((t) => testTitles.push(t.title));
+    });
     for (let i = 0; i < suites.length; i++) {
-      this._checkChange(suites[i], titles);
+      this._detectSuiteChange(suites[i], suiteTitles);      
     }
   }
   

@@ -298,6 +298,21 @@ test.describe("Core features", () => {
       const report = testAdapter.getReport();
       expect(report[0].change).toBe('added');
     });
+    test("A new test is marked as 'added'", () => {
+      const testCase1: XTestResult = {
+        title: caseTitle,
+        status: 'passed',
+        testType: TEST_TYPE_BEHAVIOR
+      };
+      const newSuite: XTestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: [testCase1],
+      };
+      reporter.generateReport(newSuite, []);
+      const report = testAdapter.getReport();
+      expect(testCase1.change).toBe('added');
+    });
     test("An exsiting suite isn't marked", () => {
       const testCase1: XTestResult = {
         title: caseTitle,
