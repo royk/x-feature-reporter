@@ -48,10 +48,21 @@ class XFeatureReporter {
             }
         }
     }
-    generateReport(results) {
+    _markChanges(opaqueSuites, oldResults) {
+        for (let i = 0; i < opaqueSuites.length; i++) {
+            const oldSuite = oldResults.find((os) => os.title === opaqueSuites[i].title);
+            if (!oldSuite) {
+                opaqueSuites[i].change = 'added';
+            }
+        }
+    }
+    generateReport(results, oldResults) {
         this._removeNonBehavioralTests(results);
-        const mergedSuite = this._mergeSuites(results, {}, '');
-        const opaqueSuites = this._removeTransparentSuites(mergedSuite);
+        this._mergeSuites(results, {}, '');
+        const opaqueSuites = this._removeTransparentSuites(results);
+        if (oldResults) {
+            this._markChanges(opaqueSuites, oldResults);
+        }
         this.outputAdapter.generateReport(opaqueSuites);
     }
 }

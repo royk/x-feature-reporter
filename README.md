@@ -52,6 +52,8 @@ The below section was generated using [Playwright-feature-reporter](https://gith
 ### Test types
  - ✅ Only tests with testType 'behavior' appear as features. Non-behavioral tests aren't shown in the report (if testType is not specified, it's assumed to be 'behavior')
  - ✅ Don't output suites containing only non-behavioral tests
+## Change detection
+ - ✅ A new suite is marked as 'added'
 ## Markdown generation
 ### Suites (headings)
  - ✅ Suites appear as headings. Nested Suites are nested headings
