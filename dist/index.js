@@ -1,15 +1,9 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.XFeatureReporter = exports.TEST_TYPE_BEHAVIOR = void 0;
-const markdown_1 = require("./adapters/markdown");
-const js_levenshtein_1 = __importDefault(require("js-levenshtein"));
-exports.TEST_TYPE_BEHAVIOR = 'behavior';
-class XFeatureReporter {
+import levenshtein from 'js-levenshtein';
+import { MarkdownAdapter } from './adapters/markdown.js';
+export const TEST_TYPE_BEHAVIOR = 'behavior';
+export class XFeatureReporter {
     constructor(outputAdapter) {
-        this.outputAdapter = outputAdapter || new markdown_1.MarkdownAdapter();
+        this.outputAdapter = outputAdapter || new MarkdownAdapter();
     }
     _mergeSuites(suite, suiteStructure, lineage) {
         const fullLineage = `${lineage}/${suite.title}`;
@@ -38,7 +32,7 @@ class XFeatureReporter {
     }
     _removeNonBehavioralTests(suite) {
         const removalCandidates = [];
-        suite.tests = suite.tests.filter((t) => !t.testType || t.testType === exports.TEST_TYPE_BEHAVIOR);
+        suite.tests = suite.tests.filter((t) => !t.testType || t.testType === TEST_TYPE_BEHAVIOR);
         if (suite.tests.length === 0) {
             removalCandidates.push(suite);
         }
@@ -53,7 +47,7 @@ class XFeatureReporter {
         }
     }
     _detectSuiteChange(suite, oldTitles) {
-        let minDistance = Math.min(...oldTitles.map(title => (0, js_levenshtein_1.default)(suite.title, title)));
+        let minDistance = Math.min(...oldTitles.map(title => levenshtein(suite.title, title)));
         const ratio = minDistance / suite.title.length;
         if (minDistance == Infinity) {
             suite.change = 'added';
@@ -96,4 +90,4 @@ class XFeatureReporter {
         this.outputAdapter.generateReport(opaqueSuites);
     }
 }
-exports.XFeatureReporter = XFeatureReporter;
+export * from './types.js';

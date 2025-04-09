@@ -1,20 +1,5 @@
-export type XTestSuite = {
-    title: string;
-    suites: XTestSuite[];
-    tests: XTestResult[];
-    transparent?: boolean;
-    change?: "added" | "removed" | "modified";
-};
-export type XTestResult = {
-    title: string;
-    status: "passed" | "failed" | "skipped";
-    testType?: string;
-    change?: "added" | "removed" | "modified";
-};
+import type { XTestSuite, XTestResult, XAdapter } from './types.js';
 export declare const TEST_TYPE_BEHAVIOR = "behavior";
-export interface XAdapter {
-    generateReport(results: XTestSuite[]): void;
-}
 export declare class XFeatureReporter {
     constructor(outputAdapter?: XAdapter);
     private outputAdapter;
@@ -26,3 +11,4 @@ export declare class XFeatureReporter {
     _markChanges(suites: XTestSuite[], oldResults: XTestSuite[]): void;
     generateReport(results: XTestSuite, oldResults?: XTestSuite[]): void;
 }
+export * from './types.js';

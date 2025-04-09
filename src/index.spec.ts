@@ -1,10 +1,12 @@
-import { test, expect } from '@playwright/test';
-import sinon from 'sinon';
+
 import fs from 'fs';
-import {XFeatureReporter, XTestSuite, XTestResult, TEST_TYPE_BEHAVIOR, XAdapter } from './index';
 import { CHANGE_PREFIX_ADDED, MarkdownAdapter, TEST_PREFIX_FAILED, TEST_PREFIX_PASSED, TEST_PREFIX_SKIPPED } from './adapters/markdown';
 import { JsonAdapter } from './adapters/json';
+import type { XTestSuite, XTestResult, XAdapter } from './types';
+import { XFeatureReporter, TEST_TYPE_BEHAVIOR } from './index';
+import { test, expect } from '@playwright/test';
 
+import sinon from 'sinon';
 
 let writeFileSyncStub: sinon.SinonStub;
 

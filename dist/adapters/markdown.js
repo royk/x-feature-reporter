@@ -1,16 +1,10 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MarkdownAdapter = exports.defaultEmbeddingPlaceholder = exports.CHANGE_PREFIX_ADDED = exports.TEST_PREFIX_FAILED = exports.TEST_PREFIX_PASSED = exports.TEST_PREFIX_SKIPPED = void 0;
-const fs_1 = __importDefault(require("fs"));
-exports.TEST_PREFIX_SKIPPED = '🚧';
-exports.TEST_PREFIX_PASSED = '✅';
-exports.TEST_PREFIX_FAILED = '❌';
-exports.CHANGE_PREFIX_ADDED = '🔥NEW🔥';
-exports.defaultEmbeddingPlaceholder = 'x-feature-reporter';
-class MarkdownAdapter {
+import fs from 'fs';
+export const TEST_PREFIX_SKIPPED = '🚧';
+export const TEST_PREFIX_PASSED = '✅';
+export const TEST_PREFIX_FAILED = '❌';
+export const CHANGE_PREFIX_ADDED = '🔥NEW🔥';
+export const defaultEmbeddingPlaceholder = 'x-feature-reporter';
+export class MarkdownAdapter {
     constructor(adapterOptions) {
         this.nestedLevel = 0;
         this.stringBuilder = '';
@@ -22,11 +16,11 @@ class MarkdownAdapter {
     _getOutcomeIcon(testCase) {
         switch (testCase.status) {
             case 'skipped':
-                return exports.TEST_PREFIX_SKIPPED;
+                return TEST_PREFIX_SKIPPED;
             case 'passed':
-                return exports.TEST_PREFIX_PASSED;
+                return TEST_PREFIX_PASSED;
             case 'failed':
-                return exports.TEST_PREFIX_FAILED;
+                return TEST_PREFIX_FAILED;
         }
         return testCase.status;
     }
@@ -45,7 +39,7 @@ class MarkdownAdapter {
         }
         let changePrefix = '';
         if (s.change === 'added') {
-            changePrefix = `${exports.CHANGE_PREFIX_ADDED} `;
+            changePrefix = `${CHANGE_PREFIX_ADDED} `;
         }
         this.stringBuilder += `${headerPrefix} ${changePrefix}${s.title}\n`;
         this.nestedLevel++;
@@ -63,7 +57,7 @@ class MarkdownAdapter {
             }
             changePrefix = '';
             if (test.change === 'added') {
-                changePrefix = `${exports.CHANGE_PREFIX_ADDED} `;
+                changePrefix = `${CHANGE_PREFIX_ADDED} `;
             }
             this.stringBuilder += ` - ${changePrefix}${this._getOutcomeIcon(test)} ${testTitle}\n`;
         });
@@ -73,8 +67,8 @@ class MarkdownAdapter {
         this.nestedLevel--;
     }
     _generateMarkdown(outputFile, options) {
-        const existingContent = fs_1.default.existsSync(outputFile) ? fs_1.default.readFileSync(outputFile, 'utf8') : '';
-        const embeddingPlaceholder = options.embeddingPlaceholder || exports.defaultEmbeddingPlaceholder;
+        const existingContent = fs.existsSync(outputFile) ? fs.readFileSync(outputFile, 'utf8') : '';
+        const embeddingPlaceholder = options.embeddingPlaceholder || defaultEmbeddingPlaceholder;
         const embeddingPlaceholderStart = `<!-- ${embeddingPlaceholder}--start -->`;
         const embeddingPlaceholderEnd = `<!-- ${embeddingPlaceholder}--end -->`;
         if (existingContent.includes(embeddingPlaceholderStart)) {
@@ -84,10 +78,10 @@ class MarkdownAdapter {
             }
             const startPlaceholderIndex = existingContent.indexOf(embeddingPlaceholderStart);
             const newContent = existingContent.slice(0, startPlaceholderIndex) + embeddingPlaceholderStart + this.stringBuilder + existingContent.slice(endPlaceholderIndex);
-            fs_1.default.writeFileSync(outputFile, newContent);
+            fs.writeFileSync(outputFile, newContent);
         }
         else {
-            fs_1.default.writeFileSync(outputFile, this.stringBuilder);
+            fs.writeFileSync(outputFile, this.stringBuilder);
         }
     }
     generateReport(results) {
@@ -103,4 +97,4 @@ class MarkdownAdapter {
         this._generateMarkdown(this.adapterOptions.outputFile, this.adapterOptions);
     }
 }
-exports.MarkdownAdapter = MarkdownAdapter;
+export * from '../types.js';

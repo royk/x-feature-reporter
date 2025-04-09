@@ -1,10 +1,7 @@
-import { XTestSuite } from "..";
 import fs from 'fs';
-import { XAdapter } from '..';
+import type { JsonAdapterOptions, XAdapter, XTestSuite } from '../types.js';
 
-export type JsonAdapterOptions = {
-    outputFile: string;
-};
+
 export class JsonAdapter implements XAdapter {
     constructor(adapterOptions?: JsonAdapterOptions) {
         this.adapterOptions = adapterOptions || {outputFile: 'report.json'};
@@ -14,3 +11,5 @@ export class JsonAdapter implements XAdapter {
         fs.writeFileSync(this.adapterOptions.outputFile, JSON.stringify(results));
     }
 }   
+
+export * from '../types.js';

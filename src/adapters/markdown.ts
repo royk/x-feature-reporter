@@ -1,5 +1,5 @@
-import { XTestResult, XTestSuite, XAdapter } from "..";
 import fs from 'fs';
+import type { XAdapter, XTestSuite, XTestResult, MarkdownAdapterOptions } from '../types.js';
 
 export const TEST_PREFIX_SKIPPED = '🚧';
 export const TEST_PREFIX_PASSED = '✅';
@@ -9,11 +9,7 @@ export const CHANGE_PREFIX_ADDED = '🔥NEW🔥';
 
 export const defaultEmbeddingPlaceholder = 'x-feature-reporter';
 
-export type MarkdownAdapterOptions = {
-    embeddingPlaceholder?: string;
-    fullReportLink?: string;
-    outputFile: string;
-};
+
 
 export class MarkdownAdapter implements XAdapter {
     constructor(adapterOptions?: MarkdownAdapterOptions) {
@@ -112,3 +108,5 @@ export class MarkdownAdapter implements XAdapter {
         this._generateMarkdown(this.adapterOptions.outputFile, this.adapterOptions);
     }
 }   
+
+export * from '../types.js';

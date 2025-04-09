@@ -1,24 +1,10 @@
-import { MarkdownAdapter } from './adapters/markdown';
 import levenshtein from 'js-levenshtein';
-export type XTestSuite = {
-  title: string;
-  suites: XTestSuite[];
-  tests: XTestResult[];
-  transparent?: boolean;
-  change?: "added" | "removed" | "modified";
-};
-export type XTestResult = {
-  title: string;
-  status: "passed" | "failed" | "skipped";
-  testType?: string;
-  change?: "added" | "removed" | "modified";
-};
+import { MarkdownAdapter } from './adapters/markdown.js';
+import type { XTestSuite, XTestResult, XAdapter } from './types.js';
+
 
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 
-export interface XAdapter {
-  generateReport(results: XTestSuite[]): void;
-}
 export class XFeatureReporter  {
   constructor(outputAdapter?: XAdapter) {
     this.outputAdapter = outputAdapter || new MarkdownAdapter();
@@ -118,3 +104,5 @@ export class XFeatureReporter  {
   
   
 }
+
+export * from './types.js';
