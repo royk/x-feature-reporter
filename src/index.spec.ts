@@ -25,6 +25,20 @@ const testAdapter = new class implements XAdapter {
     return this.report;
   }
 }
+const resultFiles: string[] = [];
+const createOldResults = (results: XTestSuite[]) => {
+  const oldResults = JSON.stringify(results);
+  const fileName = 'old-results-' + Math.random().toString(36).substring(2, 15) + '.json';
+  fs.writeFileSync(fileName, oldResults);
+  resultFiles.push(fileName);
+  return fileName;
+}
+const clearOldResults = () => {
+  resultFiles.forEach((file) => {
+    fs.unlinkSync(file);
+  });
+  resultFiles.length = 0;
+}
 test.describe("Core features", () => {
   test.beforeEach(() => {
     writeFileSyncStub = sinon.stub(fs, 'writeFileSync');
@@ -278,6 +292,9 @@ test.describe("Core features", () => {
     test.beforeEach(() => {
       reporter = new XFeatureReporter(testAdapter);
     });
+    test.afterAll(() => {
+      clearOldResults();
+    });
     test("A new suite is marked as 'added'", () => {
       const testCase1: XTestResult = {
         title: caseTitle,
@@ -295,7 +312,8 @@ test.describe("Core features", () => {
         suites: [newSuite],
         tests: []
       };
-      reporter.generateReport(rootSuite2, []);
+
+      reporter.generateReport(rootSuite2, createOldResults([]));
       const report = testAdapter.getReport();
       expect(report[0].change).toBe('added');
     });
@@ -310,14 +328,14 @@ test.describe("Core features", () => {
         suites: [],
         tests: [testCase1],
       };
-      reporter.generateReport(newSuite, []);
+      reporter.generateReport(newSuite, createOldResults([]));
       const oldReport = testAdapter.getReport();
       const suite2: XTestSuite = {
         title: featureTitle + ' modified',
         suites: [],
         tests: [testCase1]
       };
-      reporter.generateReport(suite2, oldReport);
+      reporter.generateReport(suite2, createOldResults(oldReport));
       expect(suite2.change).toBe('modified');
     });
     test("A new test is marked as 'added'", () => {
@@ -331,7 +349,7 @@ test.describe("Core features", () => {
         suites: [],
         tests: [testCase1],
       };
-      reporter.generateReport(newSuite, []);
+      reporter.generateReport(newSuite, createOldResults([]));
       const report = testAdapter.getReport();
       expect(testCase1.change).toBe('added');
     });
@@ -352,7 +370,7 @@ test.describe("Core features", () => {
         suites: [newSuite],
         tests: []
       };
-      reporter.generateReport(rootSuite2, []);
+      reporter.generateReport(rootSuite2, createOldResults([]));
       const oldReport = testAdapter.getReport();
       const newSuite2: XTestSuite = {
         title: subfeatureTitle,
@@ -362,7 +380,7 @@ test.describe("Core features", () => {
       rootSuite2.suites = [newSuite2];
       rootSuite2.suites[0] = newSuite2;
       newSuite.change = undefined;
-      reporter.generateReport(rootSuite2, oldReport);
+      reporter.generateReport(rootSuite2, createOldResults(oldReport));
       const newReport = testAdapter.getReport();
       expect(newSuite.change).toBe(undefined);
     });
