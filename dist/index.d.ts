@@ -9,6 +9,6 @@ export declare class XFeatureReporter {
     _detectSuiteChange(suite: XTestSuite, oldTitles: string[]): void;
     _detectTestChange(test: XTestResult, oldTitles: string[]): void;
     _markChanges(suites: XTestSuite[], oldResults: XTestSuite[]): void;
-    generateReport(results: XTestSuite, oldResults?: XTestSuite[]): void;
+    generateReport(results: XTestSuite, oldResultsFile?: string): void;
 }
 export * from './types.js';

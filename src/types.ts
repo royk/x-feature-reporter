@@ -17,12 +17,12 @@ export interface XTestSuite {
     suites: XTestSuite[];
     tests: XTestResult[];
     transparent?: boolean;
-    change?: "added" | "removed" | "modified";
+    change?: "added" | "removed" | "modified" | "";
 };
 export interface XTestResult {
     title: string;
     status: "passed" | "failed" | "skipped";
     testType?: string;
-    change?: "added" | "removed" | "modified";
+    change?: "added" | "removed" | "modified" | "";
 };
 

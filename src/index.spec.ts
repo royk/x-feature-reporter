@@ -295,6 +295,42 @@ test.describe("Core features", () => {
     test.afterAll(() => {
       clearOldResults();
     });
+    test.skip("Can be set to output only changes", () => {
+      const testCase1: XTestResult = {
+        title: caseTitle,
+        status: 'passed',
+        testType: TEST_TYPE_BEHAVIOR
+      };
+      const newSuite: XTestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: [testCase1],
+      };
+      const rootSuite1: XTestSuite = {
+        title: 'dont print',
+        transparent: true,
+        suites: [newSuite],
+        tests: []
+      };
+      reporter.generateReport(rootSuite1, createOldResults([]));
+      const oldReport = testAdapter.getReport();
+      console.log(JSON.stringify(oldReport));
+      const newSuite2: XTestSuite = {
+        title: subfeatureTitle,
+        suites: [newSuite],
+        tests: []
+      };
+      const rootSuite2: XTestSuite = {
+        title: 'dont print',
+        transparent: true,
+        suites: [newSuite, newSuite2],
+        tests: []
+      }
+      newSuite.change = undefined;
+      reporter.generateReport(rootSuite2, createOldResults(oldReport));
+      const newReport = testAdapter.getReport();
+      console.log(JSON.stringify(newReport));
+    });
     test("A new suite is marked as 'added'", () => {
       const testCase1: XTestResult = {
         title: caseTitle,
@@ -353,7 +389,7 @@ test.describe("Core features", () => {
       const report = testAdapter.getReport();
       expect(testCase1.change).toBe('added');
     });
-    test("An exsiting suite isn't marked", () => {
+    test("Exsiting tests and suites aren't marked as changed", () => {
       const testCase1: XTestResult = {
         title: caseTitle,
         status: 'passed',
@@ -364,25 +400,19 @@ test.describe("Core features", () => {
         suites: [],
         tests: [testCase1],
       };
-      const rootSuite2: XTestSuite = {
+      const rootSuite: XTestSuite = {
         title: 'dont print',
         transparent: true,
         suites: [newSuite],
         tests: []
       };
-      reporter.generateReport(rootSuite2, createOldResults([]));
+      reporter.generateReport(rootSuite, createOldResults([]));
       const oldReport = testAdapter.getReport();
-      const newSuite2: XTestSuite = {
-        title: subfeatureTitle,
-        suites: [newSuite],
-        tests: []
-      };
-      rootSuite2.suites = [newSuite2];
-      rootSuite2.suites[0] = newSuite2;
-      newSuite.change = undefined;
-      reporter.generateReport(rootSuite2, createOldResults(oldReport));
+      reporter.generateReport(rootSuite, createOldResults(oldReport));
       const newReport = testAdapter.getReport();
-      expect(newSuite.change).toBe(undefined);
+      console.log(JSON.stringify(newReport)); 
+      expect(newReport[0].change).toBe("");
+      expect(newReport[0].tests[0].change).toBe("");
     });
     
   });

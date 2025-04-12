@@ -1,5 +1,6 @@
 import levenshtein from 'js-levenshtein';
 import { MarkdownAdapter } from './adapters/markdown.js';
+import fs from 'fs';
 export const TEST_TYPE_BEHAVIOR = 'behavior';
 export class XFeatureReporter {
     constructor(outputAdapter) {
@@ -80,12 +81,18 @@ export class XFeatureReporter {
             this._detectSuiteChange(suites[i], suiteTitles);
         }
     }
-    generateReport(results, oldResults) {
+    generateReport(results, oldResultsFile) {
         this._removeNonBehavioralTests(results);
         this._mergeSuites(results, {}, '');
         const opaqueSuites = this._removeTransparentSuites(results);
-        if (oldResults) {
-            this._markChanges(opaqueSuites, oldResults);
+        if (oldResultsFile) {
+            if (fs.existsSync(oldResultsFile)) {
+                const oldResults = JSON.parse(fs.readFileSync(oldResultsFile, 'utf8'));
+                this._markChanges(opaqueSuites, oldResults);
+            }
+            else {
+                this._markChanges(opaqueSuites, []);
+            }
         }
         this.outputAdapter.generateReport(opaqueSuites);
     }

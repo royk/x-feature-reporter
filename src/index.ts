@@ -56,7 +56,7 @@ export class XFeatureReporter  {
     }
   }
   
-  _detectSuiteChange(suite: XTestSuite, oldTitles: string[]) {
+  _detectSuiteChange(suite: XTestSuite, oldTitles: string[], oldTestTitles: string[]) {
 
     let minDistance = Math.min(...oldTitles.map(title => levenshtein(suite.title, title)));
     const ratio = minDistance / suite.title.length;
@@ -64,15 +64,20 @@ export class XFeatureReporter  {
       suite.change = 'added';
     } else if (ratio > 0.3) {
       suite.change = 'modified';
+    } else {
+      suite.change = '';
     }
-    suite.suites.forEach((s) => this._detectSuiteChange(s, oldTitles));
-    suite.tests.forEach((t) => this._detectTestChange(t, oldTitles));
+    suite.suites.forEach((s) => this._detectSuiteChange(s, oldTitles, oldTestTitles));
+    suite.tests.forEach((t) => this._detectTestChange(t, oldTestTitles));
   }
 
   _detectTestChange(test: XTestResult, oldTitles: string[]) {
+    console.log(oldTitles, test.title);
     const titleExists = oldTitles.find((t) => t === test.title);
     if (!titleExists) {
       test.change = 'added';
+    } else {
+      test.change = '';
     }
   }
   
@@ -89,7 +94,7 @@ export class XFeatureReporter  {
       os.tests.forEach((t) => testTitles.push(t.title));
     });
     for (let i = 0; i < suites.length; i++) {
-      this._detectSuiteChange(suites[i], suiteTitles);      
+      this._detectSuiteChange(suites[i], suiteTitles, testTitles);      
     }
   }
   
