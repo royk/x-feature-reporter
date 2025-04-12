@@ -47,7 +47,7 @@ export class XFeatureReporter {
             }
         }
     }
-    _detectSuiteChange(suite, oldTitles) {
+    _detectSuiteChange(suite, oldTitles, oldTestTitles) {
         let minDistance = Math.min(...oldTitles.map(title => levenshtein(suite.title, title)));
         const ratio = minDistance / suite.title.length;
         if (minDistance == Infinity) {
@@ -56,13 +56,20 @@ export class XFeatureReporter {
         else if (ratio > 0.3) {
             suite.change = 'modified';
         }
-        suite.suites.forEach((s) => this._detectSuiteChange(s, oldTitles));
-        suite.tests.forEach((t) => this._detectTestChange(t, oldTitles));
+        else {
+            suite.change = '';
+        }
+        suite.suites.forEach((s) => this._detectSuiteChange(s, oldTitles, oldTestTitles));
+        suite.tests.forEach((t) => this._detectTestChange(t, oldTestTitles));
     }
     _detectTestChange(test, oldTitles) {
+        console.log(oldTitles, test.title);
         const titleExists = oldTitles.find((t) => t === test.title);
         if (!titleExists) {
             test.change = 'added';
+        }
+        else {
+            test.change = '';
         }
     }
     _markChanges(suites, oldResults) {
@@ -78,7 +85,7 @@ export class XFeatureReporter {
             os.tests.forEach((t) => testTitles.push(t.title));
         });
         for (let i = 0; i < suites.length; i++) {
-            this._detectSuiteChange(suites[i], suiteTitles);
+            this._detectSuiteChange(suites[i], suiteTitles, testTitles);
         }
     }
     generateReport(results, oldResultsFile) {
