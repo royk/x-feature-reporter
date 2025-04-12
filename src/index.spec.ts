@@ -389,7 +389,7 @@ test.describe("Core features", () => {
       const report = testAdapter.getReport();
       expect(testCase1.change).toBe('added');
     });
-    test("Exsiting tests and suites aren't marked as changed", () => {
+    test("Existing tests and suites aren't marked as changed", () => {
       const testCase1: XTestResult = {
         title: caseTitle,
         status: 'passed',
