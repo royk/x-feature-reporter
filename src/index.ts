@@ -98,10 +98,11 @@ export class XFeatureReporter  {
     }
   }
   
-  generateReport(results: XTestSuite, oldResultsFile?: string) {
+  generateReport(results: XTestSuite, oldResultsFile?: string, diffOnly?: boolean) {
     this._removeNonBehavioralTests(results);
     this._mergeSuites(results, {}, '');
     const opaqueSuites = this._removeTransparentSuites(results);
+    diffOnly = diffOnly==undefined ? false: diffOnly;
     if (oldResultsFile) {
       if (fs.existsSync(oldResultsFile)) {
         const oldResults = JSON.parse(fs.readFileSync(oldResultsFile, 'utf8'));
@@ -110,7 +111,7 @@ export class XFeatureReporter  {
         this._markChanges(opaqueSuites, []);
       }
     }
-    this.outputAdapter.generateReport(opaqueSuites);
+    this.outputAdapter.generateReport(opaqueSuites, diffOnly);
   }
   
   

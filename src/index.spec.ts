@@ -327,9 +327,9 @@ test.describe("Core features", () => {
         tests: []
       }
       newSuite.change = undefined;
-      reporter.generateReport(rootSuite2, createOldResults(oldReport));
+      reporter.generateReport(rootSuite2, createOldResults(oldReport), true);
       const newReport = testAdapter.getReport();
-      console.log(JSON.stringify(newReport));
+      expect(newReport).toEqual([])
     });
     test("A new suite is marked as 'added'", () => {
       const testCase1: XTestResult = {
@@ -430,7 +430,7 @@ test.describe("Core features", () => {
         {annotation: [{type: 'test-type', description: 'regression'}]}, () => {
           const json = [{"title":"Features","transparent":false,"suites":[{"title":"Suite A","transparent":false,"suites":[],"tests":[{"title":"Test A","status":"passed"}]},{"title":"Suite B","transparent":false,"suites":[],"tests":[{"title":"Test B","status":"passed"}]}],"tests":[]}];
           const mdAdapter = new MarkdownAdapter();
-          mdAdapter.generateReport(json as XTestSuite[]);
+          mdAdapter.generateReport(json as XTestSuite[], false);
           expect(mdAdapter._getStringBuilder()).toBe(`\n## Features\n### Suite A\n - ${TEST_PREFIX_PASSED} Test A\n### Suite B\n - ${TEST_PREFIX_PASSED} Test B\n`);
         });
         test("Suites appear as headings. Nested Suites are nested headings", () => {
