@@ -295,7 +295,7 @@ test.describe("Core features", () => {
     test.afterAll(() => {
       clearOldResults();
     });
-    test.skip("Can be set to output only changes", () => {
+    test("Can be set to output only changes", () => {
       const testCase1: XTestResult = {
         title: caseTitle,
         status: 'passed',

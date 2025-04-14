@@ -101,7 +101,7 @@ export class XFeatureReporter  {
   generateReport(results: XTestSuite, oldResultsFile?: string, diffOnly?: boolean) {
     this._removeNonBehavioralTests(results);
     this._mergeSuites(results, {}, '');
-    const opaqueSuites = this._removeTransparentSuites(results);
+    let opaqueSuites = this._removeTransparentSuites(results);
     diffOnly = diffOnly==undefined ? false: diffOnly;
     if (oldResultsFile) {
       if (fs.existsSync(oldResultsFile)) {
@@ -110,8 +110,11 @@ export class XFeatureReporter  {
       } else {
         this._markChanges(opaqueSuites, []);
       }
+      if (diffOnly) {
+        opaqueSuites = opaqueSuites.filter((s) => s.change);
+      }
     }
-    this.outputAdapter.generateReport(opaqueSuites, diffOnly);
+    this.outputAdapter.generateReport(opaqueSuites);
   }
   
   

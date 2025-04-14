@@ -9,7 +9,7 @@ export interface MarkdownAdapterOptions {
 };
 
 export abstract class XAdapter {
-    abstract generateReport(results: XTestSuite[], diffOnly:boolean): void;
+    abstract generateReport(results: XTestSuite[]): void;
 }
 
 export interface XTestSuite {
