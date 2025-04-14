@@ -295,41 +295,40 @@ test.describe("Core features", () => {
     test.afterAll(() => {
       clearOldResults();
     });
-    test("Can be set to output only changes", () => {
-      const testCase1: XTestResult = {
-        title: caseTitle,
-        status: 'passed',
-        testType: TEST_TYPE_BEHAVIOR
-      };
-      const newSuite: XTestSuite = {
-        title: featureTitle,
-        suites: [],
-        tests: [testCase1],
-      };
-      const rootSuite1: XTestSuite = {
-        title: 'dont print',
-        transparent: true,
-        suites: [newSuite],
-        tests: []
-      };
-      reporter.generateReport(rootSuite1, createOldResults([]));
-      const oldReport = testAdapter.getReport();
-      console.log(JSON.stringify(oldReport));
-      const newSuite2: XTestSuite = {
-        title: subfeatureTitle,
-        suites: [newSuite],
-        tests: []
-      };
-      const rootSuite2: XTestSuite = {
-        title: 'dont print',
-        transparent: true,
-        suites: [newSuite, newSuite2],
-        tests: []
-      }
-      newSuite.change = undefined;
-      reporter.generateReport(rootSuite2, createOldResults(oldReport), true);
-      const newReport = testAdapter.getReport();
-      expect(newReport).toEqual([])
+    test.describe("Diff only", () => {
+        test.only("Removes unchanged suites", () => {
+          const testCase1: XTestResult = {
+            title: caseTitle,
+          status: 'passed',
+          testType: TEST_TYPE_BEHAVIOR
+        };
+        const unchanged: XTestSuite = {
+          title: featureTitle,
+          suites: [],
+          tests: [testCase1],
+        };
+        const changed: XTestSuite = {
+          title: 'Some new feature',
+          suites: [],
+          tests: [testCase1],
+        };
+        const rootSuite1: XTestSuite = {
+          title: 'dont print',
+          transparent: true,
+          suites: [unchanged],
+          tests: []
+        };
+        const rootSuite2: XTestSuite = {
+          title: 'dont print',
+          transparent: true,
+          suites: [unchanged, changed],
+          tests: []
+        }
+        unchanged.change = undefined;
+        reporter.generateReport(rootSuite2, createOldResults([rootSuite1]), true);
+        const newReport = testAdapter.getReport();
+        expect(newReport).toEqual([changed]);
+      });
     });
     test("A new suite is marked as 'added'", () => {
       const testCase1: XTestResult = {
