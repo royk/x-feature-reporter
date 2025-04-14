@@ -56,7 +56,7 @@ export class XFeatureReporter  {
     }
   }
   
-  _detectSuiteChange(suite: XTestSuite, oldTitles: string[], oldTestTitles: string[]) {
+  _detectSuiteChange(suite: XTestSuite, oldTitles: string[], oldTests: XTestResult[]) {
 
     let minDistance = Math.min(...oldTitles.map(title => levenshtein(suite.title, title)));
     const ratio = minDistance / suite.title.length;
@@ -67,16 +67,21 @@ export class XFeatureReporter  {
     } else {
       suite.change = '';
     }
-    suite.suites.forEach((s) => this._detectSuiteChange(s, oldTitles, oldTestTitles));
-    suite.tests.forEach((t) => this._detectTestChange(t, oldTestTitles));
+    suite.suites.forEach((s) => this._detectSuiteChange(s, oldTitles, oldTests));
+    suite.tests.forEach((t) => this._detectTestChange(t, oldTests));
   }
 
-  _detectTestChange(test: XTestResult, oldTitles: string[]) {
-    const titleExists = oldTitles.find((t) => t === test.title);
-    if (!titleExists) {
+  _detectTestChange(test: XTestResult, oldTests: XTestResult[]) {
+    const oldTest = oldTests.find((t) => t.title === test.title);
+    if (!oldTest) {
       test.change = 'added';
     } else {
-      test.change = '';
+      console.log(oldTest.status, test.status);
+      if (oldTest.status !== test.status) {
+        test.change = 'modified';
+      } else {
+        test.change = '';
+      }
     }
   }
   
@@ -84,13 +89,13 @@ export class XFeatureReporter  {
     function getSuiteTitle(titles:string[], suite: XTestSuite) {
       titles.push(suite.title);
       suite.suites.forEach((s) => getSuiteTitle(titles, s));
-      suite.tests.forEach((t) => testTitles.push(t.title));
+      suite.tests.forEach((t) => testTitles.push(t));
     }
     const suiteTitles = [];
     const testTitles = [];
-    oldResults.forEach((os) => {
-      getSuiteTitle(suiteTitles, os);
-      os.tests.forEach((t) => testTitles.push(t.title));
+    oldResults.forEach((oldSuite) => {
+      getSuiteTitle(suiteTitles, oldSuite);
+      oldSuite.tests.forEach((t) => testTitles.push(t));
     });
     for (let i = 0; i < suites.length; i++) {
       this._detectSuiteChange(suites[i], suiteTitles, testTitles);      
@@ -110,10 +115,14 @@ export class XFeatureReporter  {
         this._markChanges(opaqueSuites, []);
       }
       if (diffOnly) {
-        opaqueSuites = opaqueSuites.filter((s) => s.change);
+        // keep suites if they have a test or suite that changed
+        const containsChangeRecursive = (suite: XTestSuite) => {
+          return suite.change || suite.suites.some(containsChangeRecursive) || suite.tests.some(t => t.change);
+        }
+        opaqueSuites = opaqueSuites.filter(containsChangeRecursive);
         opaqueSuites.forEach((s) => {
-          s.suites = s.suites.filter((s) => s.change);
-          s.tests = s.tests.filter((t) => t.change);
+          s.suites = s.suites.filter(containsChangeRecursive);
+          s.tests = s.tests.filter(t => t.change);
         });
       }
     }

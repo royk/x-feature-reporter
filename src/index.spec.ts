@@ -296,9 +296,49 @@ test.describe("Core features", () => {
       clearOldResults();
     });
     test.describe("Diff only", () => {
-        test("Removes unchanged suites", () => {
-          const testCase1: XTestResult = {
-            title: caseTitle,
+      test.skip("Remove unchanged tests", () => {
+        const testCase1: XTestResult = {
+          title: caseTitle,
+          status: 'passed',
+          testType: TEST_TYPE_BEHAVIOR
+        };
+        const testCase2: XTestResult = {
+          title: caseTitle,
+          status: 'failed',
+          testType: TEST_TYPE_BEHAVIOR
+        };
+        const unchanged: XTestSuite = {
+          title: featureTitle,
+          suites: [],
+          tests: [testCase1],
+        };
+        const changed: XTestSuite = {
+          title: featureTitle,
+          suites: [],
+          tests: [testCase2],
+        };
+        const rootSuite1: XTestSuite = {
+          title: 'dont print',
+          transparent: true,
+          suites: [unchanged],
+          tests: []
+        };
+        const rootSuite2: XTestSuite = {
+          title: 'dont print',
+          transparent: true,
+          suites: [changed],
+          tests: []
+        }
+        unchanged.change = undefined;
+        reporter.generateReport(rootSuite2, createOldResults([rootSuite1]), true);
+        const newReport = testAdapter.getReport();
+        expect(newReport.length).toBe(1);
+        expect(newReport[0].title).toBe(changed.title);
+        expect(newReport[0].tests.length).toBe(1);
+      });
+      test("Removes unchanged suites", () => {
+        const testCase1: XTestResult = {
+          title: caseTitle,
           status: 'passed',
           testType: TEST_TYPE_BEHAVIOR
         };
@@ -349,7 +389,7 @@ test.describe("Core features", () => {
         suites: [newSuite],
         tests: []
       };
-
+      
       reporter.generateReport(rootSuite2, createOldResults([]));
       const report = testAdapter.getReport();
       expect(report[0].change).toBe('added');
@@ -389,6 +429,31 @@ test.describe("Core features", () => {
       reporter.generateReport(newSuite, createOldResults([]));
       const report = testAdapter.getReport();
       expect(testCase1.change).toBe('added');
+    });
+    test("An existing change with a different status is marked as 'changed'", () => {
+      const testCase1: XTestResult = {
+        title: caseTitle,
+        status: 'passed',
+        testType: TEST_TYPE_BEHAVIOR
+      };
+      const testCase2: XTestResult = {
+        title: caseTitle,
+        status: 'failed',
+        testType: TEST_TYPE_BEHAVIOR
+      };
+      const suiteOld: XTestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: [testCase1],
+      };
+      const suiteNew: XTestSuite = {
+        title: featureTitle,
+        suites: [],
+        tests: [testCase2],
+      };
+      reporter.generateReport(suiteNew, createOldResults([suiteOld]));
+      const report = testAdapter.getReport();
+      expect(report[0].tests[0].change).toBe('modified');
     });
     test("Existing tests and suites aren't marked as changed", () => {
       const testCase1: XTestResult = {
