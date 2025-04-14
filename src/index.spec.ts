@@ -296,7 +296,7 @@ test.describe("Core features", () => {
       clearOldResults();
     });
     test.describe("Diff only", () => {
-      test.skip("Remove unchanged tests", () => {
+      test("Remove unchanged tests", () => {
         const testCase1: XTestResult = {
           title: caseTitle,
           status: 'passed',
@@ -476,7 +476,6 @@ test.describe("Core features", () => {
       const oldReport = testAdapter.getReport();
       reporter.generateReport(rootSuite, createOldResults(oldReport));
       const newReport = testAdapter.getReport();
-      console.log(JSON.stringify(newReport)); 
       expect(newReport[0].change).toBe("");
       expect(newReport[0].tests[0].change).toBe("");
     });

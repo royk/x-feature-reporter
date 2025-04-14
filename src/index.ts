@@ -76,7 +76,6 @@ export class XFeatureReporter  {
     if (!oldTest) {
       test.change = 'added';
     } else {
-      console.log(oldTest.status, test.status);
       if (oldTest.status !== test.status) {
         test.change = 'modified';
       } else {
