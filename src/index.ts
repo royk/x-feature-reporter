@@ -72,7 +72,6 @@ export class XFeatureReporter  {
   }
 
   _detectTestChange(test: XTestResult, oldTitles: string[]) {
-    console.log(oldTitles, test.title);
     const titleExists = oldTitles.find((t) => t === test.title);
     if (!titleExists) {
       test.change = 'added';
@@ -112,6 +111,10 @@ export class XFeatureReporter  {
       }
       if (diffOnly) {
         opaqueSuites = opaqueSuites.filter((s) => s.change);
+        opaqueSuites.forEach((s) => {
+          s.suites = s.suites.filter((s) => s.change);
+          s.tests = s.tests.filter((t) => t.change);
+        });
       }
     }
     this.outputAdapter.generateReport(opaqueSuites);

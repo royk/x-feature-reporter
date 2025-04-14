@@ -296,7 +296,7 @@ test.describe("Core features", () => {
       clearOldResults();
     });
     test.describe("Diff only", () => {
-        test.only("Removes unchanged suites", () => {
+        test("Removes unchanged suites", () => {
           const testCase1: XTestResult = {
             title: caseTitle,
           status: 'passed',
@@ -327,7 +327,9 @@ test.describe("Core features", () => {
         unchanged.change = undefined;
         reporter.generateReport(rootSuite2, createOldResults([rootSuite1]), true);
         const newReport = testAdapter.getReport();
-        expect(newReport).toEqual([changed]);
+        expect(newReport.length).toBe(1);
+        expect(newReport[0].title).toBe(changed.title);
+        expect(newReport[0].tests.length).toBe(0);
       });
     });
     test("A new suite is marked as 'added'", () => {
